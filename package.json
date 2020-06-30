@@ -1,0 +1,55 @@
+{
+	"private": true,
+	"author": "fafer",
+	"license": "MIT",
+	"scripts": {
+		"init": "lerna bootstrap --no-ci",
+		"start": "node packages/seus-cli/lib/index.js",
+		"eslint": "eslint . --ext .js --fix",
+		"prettier": "prettier '**/*.js' --trailing-comma es5 --single-quote --write",
+		"link": "cd packages/seus-cli && npm unlink && npm link",
+		"clean": "git clean -dfqX -- ./node_modules **/{dist,node_modules}/ ./package-lock.json **/package-lock.json ./packages/**/logs",
+		"clean:log": "git clean -dfqX -- ./packages/**/logs",
+		"test": "jest --verbose"
+	},
+	"devDependencies": {
+		"eslint": "^6.1.0",
+		"husky": "^3.0.1",
+		"jest": "^24.8.0",
+		"jest-config": "^24.8.0",
+		"jest-junit": "^6.4.0",
+		"jest-matcher-utils": "^24.8.0",
+		"lerna": "^3.13.0",
+		"lerna-changelog": "^0.8.2",
+		"lint-staged": "^9.2.0",
+		"prettier": "^1.18.2",
+		"validate-commit-msg": "^2.14.0",
+		"cz-conventional-changelog": "^3.2.0"
+	},
+	"husky": {
+		"hooks": {
+			"commit-msg": "validate-commit-msg",
+			"pre-commit": "lint-staged --no-verify"
+		}
+	},
+	"lint-staged": {
+		"*.js": [
+			"eslint --fix",
+			"git add"
+		],
+		"*.{md,css,html}": [
+			"prettier --trailing-comma es5 --single-quote --write",
+			"git add"
+		]
+	},
+	"jest": {
+		"projects": [
+			"<rootDir>/packages/*"
+		]
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{
+  "name": "seus-utils",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "fafer",
+  "homepage": "https://github.com/fafer/seus#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fafer/seus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/fafer/seus/issues"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
+}

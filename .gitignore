@@ -1,0 +1,13 @@
+.DS_Store
+.project
+.idea
+.vscode
+node_modules
+package-lock.json
+dist
+lerna-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/packages/*/node_modules
+account.json

@@ -1,0 +1,48 @@
+{
+  "name": "seus-cli",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "fafer",
+  "homepage": "",
+  "license": "MIT",
+  "main": "./lib/seus-cli.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "bin": {
+    "seus": "./lib/index.js"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fafer/seus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "files": [
+    "lib",
+    "scripts"
+  ],
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cross-spawn": "^6.0.5",
+    "meow": "^5.0.0",
+    "ora": "^3.2.0",
+    "seus-utils": "^1.0.0",
+    "inquirer": "^6.2.2",
+    "yargs": "^13.2.2"
+  },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "android >= 4.4",
+    "ios >= 8",
+    "not ie <= 11",
+    "maintained node versions",
+    "not dead"
+  ]
+}

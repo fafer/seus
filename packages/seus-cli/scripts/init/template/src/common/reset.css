@@ -1,0 +1,264 @@
+@charset "UTF-8";
+
+* {
+  user-select: none;
+}
+
+input,
+textarea {
+  user-select: text;
+}
+
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video,
+select {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+  font-family: Microsoft YaHei;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: '微软雅黑';
+  font-size: 100%;
+  color: #333;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+audio,
+canvas,
+video {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+audio:not([controls]) {
+  display: none;
+}
+
+:hover,
+:focus,
+:active {
+  outline: none;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+  font-family: Microsoft YaHei;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  border: none;
+}
+
+input,
+select,
+img {
+  vertical-align: middle;
+  border: 0px;
+  font-size: 100%;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+fieldset,
+img {
+  border: 0;
+  -webkit-touch-callout: none;
+}
+
+a {
+  color: #0099cc;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #0383ae;
+  text-decoration: none;
+}
+
+.floatF {
+  float: left;
+}
+
+.floatR {
+  float: right;
+}
+
+.clearfix:after {
+  content: '.';
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+i,
+em {
+  font-style: normal;
+}
+
+select,
+input[type='text'],
+input[type='submit'],
+input[type='reset'],
+input[type='button'],
+button {
+  -webkit-appearance: none;
+}
+
+input {
+  -webkit-appearance: none;
+}
+
+img {
+  display: block;
+}
+
+.scale-1px {
+  position: relative;
+  border: none;
+}
+
+.scale-1px:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid #000;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 200%;
+  height: 200%;
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+}
+
+/*清除浮动代码*/
+.clearfloat:after {
+  display: block;
+  clear: both;
+  content: '';
+  visibility: hidden;
+  height: 0;
+}
+.clearfloat:before {
+  content: '';
+  display: table;
+}
+.clearfloat {
+  zoom: 1;
+}
+.p10 {
+  display: block;
+  width: 1px;
+  height: 10px;
+}
+body {
+  background-color: #f6f6f6;
+}
+img[src=''],
+img:not([src]) {
+  opacity: 0;
+}

@@ -1,0 +1,21 @@
+{
+  "npmClient": "npm",
+  "packages": [
+    "packages/*"
+  ],
+  "version": "1.0.0",
+  "command": {
+    "bootstrap": {
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
+    },
+    "publish": {
+      "skipGit": true,
+      "allowBranch": "master",
+      "ignoreChanges": [
+        "*.md"
+      ]
+    }
+  }
+}
