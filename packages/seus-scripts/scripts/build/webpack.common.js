@@ -1,6 +1,7 @@
 const path = require('path');
 const conf = require('../../conf');
 const fs = require('fs');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -149,19 +150,10 @@ module.exports = {
       ...conf.ALIAS
     },
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          name: 'vendor',
-          chunks: 'initial',
-          test: /node_modules\/(vue|@babel\/polyfill)\//,
-          priority: 10,
-        },
-      },
-    },
-  },
   plugins: [
+    new webpack.DllReferencePlugin({
+      manifest: require(path.join(conf.COPY_PATH, 'vendor-manifest.json'))
+    }),
     ...(function() {
       if(!conf.CONFIG_COPY_PATH || !fs.existsSync(conf.COPY_PATH)) return [];
       return [new CopyWebpackPlugin([

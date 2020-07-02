@@ -36,7 +36,7 @@ const SRC_PATH = path.join(cwd, 'src');
 
 const OUT_PATH = path.join(cwd, 'dist');
 
-const ENTRY_PATH = path.join(cwd, 'src/pages');
+const ENTRY_PATH = path.join(cwd, `src/${conf.entry || 'pages'}`);
 
 const PREFIX = conf.prefix || path.basename(ENTRY_PATH);
 
@@ -61,6 +61,8 @@ const PROXY = conf.proxy;
 const ALIAS = conf.alias;
 const FTP = conf.ftp;
 
+const VENDOR = conf.vendor;
+
 module.exports = {
   SRC_PATH,
   OUT_PATH,
@@ -82,5 +84,6 @@ module.exports = {
   ALIAS,
   FTP,
   CONFIG_COPY_PATH,
-  PREFIX
+  PREFIX,
+  VENDOR
 };

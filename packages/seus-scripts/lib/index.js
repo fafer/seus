@@ -13,6 +13,7 @@ const cli = meow(
     seus-scripts build        编译打包
     seus-scripts ftp          将打包生成的文件上传到测试环境
     seus-scripts fcm          将打包生成的文件上线
+    seus-scripts build:dll    编译动态链接vendor资源
     seus-scripts build:ftp    编译完成后上传测试
     seus-scripts build:fcm    编译完成后上线
     seus-scripts add <name>   添加页面入口或组件

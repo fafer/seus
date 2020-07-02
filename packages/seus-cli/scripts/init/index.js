@@ -16,6 +16,7 @@ const appPackageJSON = {
     "start": "seus-scripts start",
     "mock": "seus-scripts mock",
     "build": "seus-scripts build",
+    "build:dll": "seus-scripts build:dll",
     "build:ftp": "seus-scripts build:ftp",
     "build:fcm": "seus-scripts build:fcm",
     "add": "seus-scripts add",
@@ -39,9 +40,28 @@ async function initConfig(filePath,yes=false) {
       message: chalk.green('build file deploy path:'),
       default:conf.publicBase
     },
-  ]):{seperate:'/',publicBase:'/'+appPackageJSON.name};
+    {
+      name: 'entry',
+      message: chalk.green('entry path:'),
+      default:conf.entry
+    },
+    {
+      name: 'copyPath',
+      message: chalk.green('common assets path:'),
+      default:conf.copyPath
+    },
+    {
+      name: 'frame',
+      message: chalk.green('use react(0) or vue(1):'),
+      default:0
+    }
+  ]):{seperate:'/',publicBase:'/'+appPackageJSON.name,entry:conf.entry,copyPath:conf.copyPath};
   conf.seperate = answer.seperate;
   conf.publicBase = answer.publicBase;
+  conf.entry = answer.entry;
+  conf.copyPath = answer.copyPath;
+  if(answer.frame === 0) conf.vendor = ['react', 'react-dom', '@babel/polyfill'];
+  else conf.vendor = ['vue', '@babel/polyfill'];
   fs.writeFileSync(filePath,JSON.stringify(conf, null, 2) + os.EOL);
 }
 
@@ -59,7 +79,8 @@ module.exports = async function (name, yes = false) {
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './template/'), name));
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './.babelrc.js'), name+'/.babelrc.js'));
   await cmdPromise(cwd, mkdirCmdString(name+'/src/components'));
-  await cmdPromise(cwd, mkdirCmdString(name+'/src/pages'));
+  await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.entry || 'pages'}`));
+  await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.copyPath || 'lib'}`));
   appPackageJSON.name = name;
   fs.writeFileSync(path.posix.join(cwd,name+'/package.json'),JSON.stringify(appPackageJSON, null, 2) + os.EOL);
   await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes);

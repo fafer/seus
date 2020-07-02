@@ -1,5 +1,5 @@
 const CommandProcessor = require('./commandProcessor');
-const {BUILDFTP,BUILDFCM} = require('../../scripts/build/buildType');
+const {BUILDFTP,BUILDFCM, BUILDDLL} = require('../../scripts/build/buildType');
 const builder = require('../../scripts/build');
 
 class BuildCommandProcessor extends CommandProcessor {

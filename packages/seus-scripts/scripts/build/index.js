@@ -1,4 +1,4 @@
-const {START,MOCK} = require('./buildType');
+const {START,MOCK, BUILDDLL} = require('./buildType');
 
 class Build {
   constructor(buildType) {
@@ -13,6 +13,9 @@ class Build {
       process.env.NODE_ENV = 'development';
       process.env.MOCK_DATA = 'mock';
       this.buildDev();
+    } else if(this.buildType === BUILDDLL) {
+      process.env.NODE_ENV = 'production';
+      return this.buildProd('./webpack.dll.js');
     } else {
       process.env.NODE_ENV = 'production';
       return this.buildProd();
@@ -27,9 +30,9 @@ class Build {
     server.listen(devConf.devServer.port);
   }
 
-  buildProd() {
+  buildProd(config='./webpack.config.prod.js') {
     const webpack = require('webpack');
-    const compiler = webpack(require('./webpack.config.prod.js'));
+    const compiler = webpack(require(config));
     return new Promise((resolve,reject) => {
       compiler.run((err, stats) => {
         if (err || stats.hasErrors()) {

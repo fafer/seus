@@ -2,6 +2,9 @@
   "prefix":"",
   "seperate":"/",
   "publicBase":"/",
+  "entry":"pages",
+  "copyPath":"lib",
+  "vendor":[],
   "port":8041,
   "host":{
     "js": "",

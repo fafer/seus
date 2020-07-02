@@ -3,7 +3,8 @@ const {
   MOCK,
   BUILD,
   BUILDFTP,
-  BUILDFCM
+  BUILDFCM,
+  BUILDDLL
 } = require('../../scripts/build/buildType');
 
 class CommandProcessorFactory {
@@ -41,6 +42,10 @@ class CommandProcessorFactory {
         break;
       case 'add':
         Processor = require('./addCommandProcessor');
+        break;
+      case 'build:dll':
+        cli.flags.buildType = BUILDDLL;
+        Processor = require('./buildCommandProcessor');
         break;
     }
     return Processor ? new Processor(cli):new CommandProcessor(cli);
