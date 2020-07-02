@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const cwd = process.cwd();
-const {conf} = require('seus-utils');
+let {conf} = require('seus-utils');
 const confPath = path.resolve(cwd,'seus.config.json');
 if(fs.existsSync(confPath)) {
   conf = Object.assign(conf,require(confPath));
