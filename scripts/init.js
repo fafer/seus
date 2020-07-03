@@ -8,6 +8,7 @@ const cp = require('child_process');
 const cleanup = () => {
   console.log('Cleaning up.');
   cp.execSync(`git checkout -- packages/*/package.json`);
+  cp.execSync(`git clean -df packages/seus-scripts/seus-scripts*.tgz`);
 };
 
 const handleExit = () => {
@@ -69,7 +70,7 @@ const args = process.argv.slice(2);
 
 const scriptPath = path.join(packagesDir, 'seus-cli', '/lib/index.js');
 cp.execSync(
-  `node ${scriptPath} ${args.join(' ')} --scripts-version="${scriptsPath}"`,
+  `node ${scriptPath} ${args.join(' ')} --scripts="${scriptsPath}"`,
   {
     cwd: rootDir,
     stdio: 'inherit',

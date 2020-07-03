@@ -17,6 +17,7 @@
     "host": "",
     "port": 21,
     "user": "",
-    "password": ""
+    "password": "",
+    "destPath": ""
   }]
 }

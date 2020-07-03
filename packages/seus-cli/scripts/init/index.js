@@ -53,9 +53,9 @@ async function initConfig(filePath,yes=false) {
     {
       name: 'frame',
       message: chalk.green('use react(0) or vue(1):'),
-      default:0
+      default:1
     }
-  ]):{seperate:'/',publicBase:'/'+appPackageJSON.name,entry:conf.entry,copyPath:conf.copyPath};
+  ]):{seperate:'/',publicBase:'/'+appPackageJSON.name,entry:conf.entry,copyPath:conf.copyPath,frame:1};
   conf.seperate = answer.seperate;
   conf.publicBase = answer.publicBase;
   conf.entry = answer.entry;
@@ -63,6 +63,7 @@ async function initConfig(filePath,yes=false) {
   if(answer.frame === 0) conf.vendor = ['react', 'react-dom', '@babel/polyfill'];
   else conf.vendor = ['vue', '@babel/polyfill'];
   fs.writeFileSync(filePath,JSON.stringify(conf, null, 2) + os.EOL);
+  return answer;
 }
 
 function shouldUseYarn() {
@@ -74,7 +75,7 @@ function shouldUseYarn() {
   }
 }
 
-module.exports = async function (name, yes = false) {
+module.exports = async function (name, yes = false,scripts='') {
   await cmdPromise(cwd, mkdirCmdString(name));
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './template/'), name));
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './.babelrc.js'), name+'/.babelrc.js'));
@@ -83,8 +84,8 @@ module.exports = async function (name, yes = false) {
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.copyPath || 'lib'}`));
   appPackageJSON.name = name;
   fs.writeFileSync(path.posix.join(cwd,name+'/package.json'),JSON.stringify(appPackageJSON, null, 2) + os.EOL);
-  await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes);
-  const dependencies = ['vue@2.6.10','vue-template-compiler@2.6.10','vue-router@3.0.3','vuex@3.1.0','vue-jsonp@0.1.8','seus-scripts'];
+  const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes);
+  const dependencies = answer.frame === 0 ? ['react@16.13.1','react-dom@16.13.1',scripts || 'seus-scripts']:['vue@2.6.10','vue-template-compiler@2.6.10','vue-router@3.0.3','vuex@3.1.0','vue-jsonp@0.1.8',scripts || 'seus-scripts'];
   console.log(`Installing ${chalk.cyan(dependencies.join(' '))}`);
   let command,args;
   if(shouldUseYarn()) {
@@ -111,7 +112,7 @@ module.exports = async function (name, yes = false) {
       console.log(chalk.cyan(`${command} ${args.join(' ')}`));
       return;
     } else {
-      cmdPromise(path.resolve(cwd,name), 'npm run add index');
+      cmdPromise(path.resolve(cwd,name), 'npm run add app');
     }
   });
 }

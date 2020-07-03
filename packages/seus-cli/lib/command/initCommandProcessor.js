@@ -7,6 +7,7 @@ class InitCommandProcessor extends CommandProcessor {
     super(cli);
     this.name = this.cli.input[1];
     this.yes = this.params.yes;
+    this.scripts = this.params.scripts;
   }
 
   async process() {
@@ -15,12 +16,13 @@ class InitCommandProcessor extends CommandProcessor {
         Usage: seus init <name>
 
         Options:
-          --yes, -y         page title
+          --yes, -y         defatult config
+          --scripts, -s     assign seus-scripts package
 
         `
       );
     } else {
-      init(this.name,this.yes);
+      init(this.name,this.yes,this.scripts);
     }
   }
 

@@ -21,7 +21,7 @@ module.exports = async function(index,all) {
   FTP.forEach(({host,port,user,password,srcPath,destPath}) => {
     let temp = {host,port,user,password};
     if(!temp.srcPath) temp.srcPath = OUT_PATH;
-    if(!temp.destPath) temp.destPath = path.posix.join('/static.58.com/', PUBLICBASE);
+    if(!temp.destPath) temp.destPath = path.posix.join('/', PUBLICBASE);
     servers.push(temp);
   });
   if(!servers.length) {

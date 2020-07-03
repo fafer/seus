@@ -8,7 +8,7 @@ const cli = meow(
   Usage: seus <command> [options]
 
   Command: 
-    seus init <name>  初始化一个项目
+    seus init <name> [--y,--s] 初始化一个项目
 
   Help:
     seus --help
@@ -19,6 +19,10 @@ const cli = meow(
       yes: {
         type: 'boolean',
         alias: 'y',
+      },
+      scripts: {
+        type: 'string',
+        alias: 's',
       }
     }
   }
