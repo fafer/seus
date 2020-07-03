@@ -7,8 +7,8 @@ const cp = require('child_process');
 
 const cleanup = () => {
   console.log('Cleaning up.');
-  cp.execSync(`git checkout -- packages/*/package.json`);
-  cp.execSync(`git clean -df packages/seus-scripts/seus-scripts*.tgz`);
+  cp.execSync('git checkout -- packages/*/package.json');
+  cp.execSync('git clean -df packages/seus-package*/*.tgz');
 };
 
 const handleExit = () => {
@@ -59,10 +59,10 @@ Object.keys(packagePathsByName).forEach(name => {
 });
 
 const scriptsFileName = cp
-  .execSync(`npm pack`, { cwd: path.join(packagesDir, 'seus-scripts') })
+  .execSync('npm pack', { cwd: path.join(packagesDir, 'seus-package-react') })
   .toString()
   .trim();
-const scriptsPath = path.join(packagesDir, 'seus-scripts', scriptsFileName);
+const scriptsPath = path.join(packagesDir, 'seus-package-react', scriptsFileName);
 
 cp.execSync('yarn cache clean');
 

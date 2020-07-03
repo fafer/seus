@@ -1,0 +1,33 @@
+{
+  "name": "seus-package-react",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "fafer <zhoucheng502@sina.com>",
+  "homepage": "https://github.com/fafer/seus#readme",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npm.taobao.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fafer/seus.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/fafer/seus/issues"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.10.4",
+    "@types/react": "^16.9.41",
+    "@types/react-dom": "^16.9.8",
+    "eslint-plugin-react": "^7.20.3",
+    "tslint-react": "^4.1.0",
+    "classnames": "^2.2.6",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "seus-scripts": "^1.0.1"
+  }
+}

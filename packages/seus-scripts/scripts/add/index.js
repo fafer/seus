@@ -1,13 +1,14 @@
 const conf = require('../../conf');
 const path = require('path');
 const fs = require('fs');
-let templateDir = path.join(__dirname, './template');
+const {frame} = require('seus-utils');
+let templateDir = path.join(__dirname, './template',frame);
 let pageTemplateDir = path.join(templateDir, 'page');
 let componentTemplateDir = path.join(templateDir, 'component');
 
 let htmlTemplate = 'index.html';
 
-let scriptTemplate = 'index.js';
+let scriptTemplate = frame === 'react'?'index.jsx':'index.js';
 
 let htmlTemplatePath = path.join(pageTemplateDir, htmlTemplate);
 
@@ -25,11 +26,25 @@ function addComponent(name) {
       path.join(componentPath, 'index.scss'),
       function() {}
     );
-    fs.copyFile(
-      path.join(componentTemplateDir, 'index.vue'),
-      path.join(componentPath, 'index.vue'),
-      function() {}
-    );
+    if(frame === 'react') {
+      let scriptStrTemp = fs.readFileSync(path.join(componentTemplateDir,'index.jsx')).toString();
+      scriptStrTemp = scriptStrTemp
+        .replace(
+          /\$\{Component\}/gi,
+          name.charAt(0).toUpperCase() + name.substring(1)
+        );
+      fs.writeFile(path.join(componentPath, 'index.jsx'), scriptStrTemp, err => {
+        if (err) {
+          console.error(`write ${path.join(componentPath, 'index.jsx')} failed`, err);
+        }
+      });
+    } else {
+      fs.copyFile(
+        path.join(componentTemplateDir, 'index.vue'),
+        path.join(componentPath, 'index.vue'),
+        function() {}
+      );
+    }
     fs.copyFile(
       path.join(componentTemplateDir, 'mock.js'),
       path.join(componentPath, 'mock.js'),
@@ -71,7 +86,7 @@ function add(name, title = '') {
     scriptStr = fs.readFileSync(scriptTemplatePath).toString();
   }
   scriptTemp = scriptStr
-    .replace(/Name/gi, name)
+    .replace(/\$\{Name\}/gi, name)
     .replace(
       /\$\{Component\}/gi,
       name.charAt(0).toUpperCase() + name.substring(1)

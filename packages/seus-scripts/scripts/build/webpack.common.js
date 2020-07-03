@@ -4,7 +4,7 @@ const fs = require('fs');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const {frame} = require('seus-utils');
 
 module.exports = {
   entry: conf.getEntry(),
@@ -38,12 +38,12 @@ module.exports = {
       //   },
       // },
       {
-        test: /\.(js|ts)$/,
+        test: /\.(jsx?|tsx?)$/,
         use: [
           ...(function() {
             let temp1 = path.resolve(process.cwd(),'.babelrc.js'),
-                temp2 = path.resolve(process.cwd(),'.babelrc.json'),
-                temp3 = path.resolve(process.cwd(),'.babelrc');
+              temp2 = path.resolve(process.cwd(),'.babelrc.json'),
+              temp3 = path.resolve(process.cwd(),'.babelrc');
             if(fs.existsSync(temp1)|| fs.existsSync(temp2) || fs.existsSync(temp3)) {
               return ['babel-loader'];
             }
@@ -64,7 +64,6 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
           },
-          // 'vue-style-loader',
           {
             loader: 'css-loader',
             options: {
@@ -144,9 +143,17 @@ module.exports = {
     modules: ['node_modules', path.resolve(__dirname, 'loaders')],
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json', '.vue', '.css', '.scss'],
+    extensions: ['.ts', '.js', '.json', ...(function() {
+      if(frame === 'react') return ['.jsx','.tsx'];
+      return ['.vue'];
+    })(), '.css', '.scss'],
     alias: {
-      vue$: 'vue/dist/vue.esm.js',
+      ...(function() {
+        if(frame === 'vue') return {
+          vue$: 'vue/dist/vue.esm.js',
+        }
+        return {};
+      })(),
       ...conf.ALIAS
     },
   },
@@ -167,6 +174,13 @@ module.exports = {
       filename: '[name].css',
       chunkFilename: '[name].css',
     }),
-    new VueLoaderPlugin(),
+    ...(function() {
+      let VueLoaderPlugin,plugins = [];
+      if(frame === 'vue') {
+        VueLoaderPlugin = require('vue-loader/lib/plugin');
+        plugins.push(new VueLoaderPlugin());
+      }
+      return plugins;
+    })()
   ],
 };

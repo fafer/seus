@@ -24,11 +24,17 @@ const appPackageJSON = {
     "fcm": "seus-scripts fcm"
   },
   'dependencies':{},
+  "config": {
+    "seus": {
+      "frame": ""
+    }
+  },
   'browserslist': packageJSON.browserslist
 };
 
 async function initConfig(filePath,yes=false) {
   console.log(chalk.cyan('init config ...'));
+  const publicBase = '/'+appPackageJSON.name;
   const answer = !yes ? await inquirer.prompt([
     {
       name: 'seperate',
@@ -38,7 +44,7 @@ async function initConfig(filePath,yes=false) {
     {
       name: 'publicBase',
       message: chalk.green('build file deploy path:'),
-      default:conf.publicBase
+      default:publicBase
     },
     {
       name: 'entry',
@@ -53,9 +59,9 @@ async function initConfig(filePath,yes=false) {
     {
       name: 'frame',
       message: chalk.green('use react(0) or vue(1):'),
-      default:1
+      default:0
     }
-  ]):{seperate:'/',publicBase:'/'+appPackageJSON.name,entry:conf.entry,copyPath:conf.copyPath,frame:1};
+  ]):{seperate:'/',publicBase,entry:conf.entry,copyPath:conf.copyPath,frame:0};
   conf.seperate = answer.seperate;
   conf.publicBase = answer.publicBase;
   conf.entry = answer.entry;
@@ -76,16 +82,17 @@ function shouldUseYarn() {
 }
 
 module.exports = async function (name, yes = false,scripts='') {
+  appPackageJSON.name = name;
   await cmdPromise(cwd, mkdirCmdString(name));
+  const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes);
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './template/'), name));
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './.babelrc.js'), name+'/.babelrc.js'));
   await cmdPromise(cwd, mkdirCmdString(name+'/src/components'));
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.entry || 'pages'}`));
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.copyPath || 'lib'}`));
-  appPackageJSON.name = name;
+  appPackageJSON.config.seus.frame = answer.frame === 0 ? 'react' : 'vue';
   fs.writeFileSync(path.posix.join(cwd,name+'/package.json'),JSON.stringify(appPackageJSON, null, 2) + os.EOL);
-  const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes);
-  const dependencies = answer.frame === 0 ? ['react@16.13.1','react-dom@16.13.1',scripts || 'seus-scripts']:['vue@2.6.10','vue-template-compiler@2.6.10','vue-router@3.0.3','vuex@3.1.0','vue-jsonp@0.1.8',scripts || 'seus-scripts'];
+  const dependencies = answer.frame === 0 ? [scripts || 'seus-package-react']:[scripts || 'seus-package-vue'];
   console.log(`Installing ${chalk.cyan(dependencies.join(' '))}`);
   let command,args;
   if(shouldUseYarn()) {
@@ -107,12 +114,13 @@ module.exports = async function (name, yes = false,scripts='') {
   args.push('--cwd');
   args.push(path.resolve(cwd,name));
   const child = spawn(command, args, { stdio: 'inherit' });
-  child.on('close', code => {
+  child.on('close', async code => {
     if (code !== 0) {
       console.log(chalk.cyan(`${command} ${args.join(' ')}`));
       return;
     } else {
-      cmdPromise(path.resolve(cwd,name), 'npm run add app');
+      await cmdPromise(path.resolve(cwd,name), 'npm run add app');
+      cmdPromise(path.resolve(cwd,name), 'npm run build:dll');
     }
   });
 }

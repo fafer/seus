@@ -3,8 +3,9 @@
 	"author": "fafer",
 	"license": "MIT",
 	"scripts": {
+		"postinstall": "npm run init",
 		"init": "lerna bootstrap --no-ci",
-    "start": "node scripts/init",
+		"start": "node scripts/init",
 		"eslint": "eslint . --ext .js --fix",
 		"prettier": "prettier '**/*.js' --trailing-comma es5 --single-quote --write",
 		"link": "cd packages/seus-cli && npm unlink && npm link",
@@ -29,7 +30,7 @@
 	"husky": {
 		"hooks": {
 			"commit-msg": "validate-commit-msg",
-			"pre-commit": "lint-staged --no-verify"
+			"pre-commit": "lint-staged"
 		}
 	},
 	"lint-staged": {

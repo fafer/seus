@@ -20,8 +20,10 @@ module.exports = async function(index,all) {
   const {FTP,OUT_PATH,PUBLICBASE} = require('../../conf');
   FTP.forEach(({host,port,user,password,srcPath,destPath}) => {
     let temp = {host,port,user,password};
-    if(!temp.srcPath) temp.srcPath = OUT_PATH;
-    if(!temp.destPath) temp.destPath = path.posix.join('/', PUBLICBASE);
+    if(!srcPath) temp.srcPath = OUT_PATH;
+    else temp.srcPath = srcPath;
+    if(!destPath) temp.destPath = path.posix.join('/', PUBLICBASE);
+    else temp.destPath = destPath;
     servers.push(temp);
   });
   if(!servers.length) {
