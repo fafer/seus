@@ -75,7 +75,7 @@ function add(name, title = '') {
       /\$\{name\}/gi,
       `${conf.PREFIX}${conf.ENTRY_SEPERATE}${name}${
         conf.ENTRY_SEPERATE
-      }${path.basename(scriptTemplate, '.js')}`
+      }${path.basename(scriptTemplate, frame === 'react' ? '.jsx' : '.js')}`
     )
     .replace(/\$\{title\}/gi, title);
   fs.writeFile(path.join(addPath, htmlTemplate), htmlTemp, err => {

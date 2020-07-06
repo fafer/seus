@@ -1,4 +1,4 @@
-const {START,MOCK, BUILDDLL} = require('./buildType');
+const {START,MOCK, BUILDDLL,BUILDBUNDLEANALY} = require('./buildType');
 
 class Build {
   constructor(buildType) {
@@ -6,19 +6,22 @@ class Build {
   }
 
   async buildEnv() {
-    if(this.buildType === START) {
-      process.env.NODE_ENV = 'development';
-      this.buildDev();
-    } else if(this.buildType === MOCK) {
-      process.env.NODE_ENV = 'development';
-      process.env.MOCK_DATA = 'mock';
-      this.buildDev();
-    } else if(this.buildType === BUILDDLL) {
-      process.env.NODE_ENV = 'production';
-      return this.buildProd('./webpack.dll.js');
-    } else {
-      process.env.NODE_ENV = 'production';
-      return this.buildProd();
+    switch(this.buildType) {
+      case MOCK:
+        process.env.MOCK_DATA = 'mock';
+      case START:
+        process.env.NODE_ENV = 'development';
+        this.buildDev();
+        break;
+      case BUILDDLL:
+        process.env.NODE_ENV = 'production';
+        this.buildProd('./webpack.dll.js');
+        break;
+      case BUILDBUNDLEANALY:
+        process.env.BUNDLE_ANALY = 'bundle-analy';
+      default:
+        process.env.NODE_ENV = 'production';
+        this.buildProd();
     }
   }
 

@@ -17,6 +17,7 @@ const appPackageJSON = {
     'mock': 'seus-scripts mock',
     'build': 'seus-scripts build',
     'build:dll': 'seus-scripts build:dll',
+    'build:analy': 'seus-scripts build:analy',
     'build:ftp': 'seus-scripts build:ftp',
     'build:fcm': 'seus-scripts build:fcm',
     'add': 'seus-scripts add',
@@ -132,11 +133,11 @@ function shouldUseYarn() {
 module.exports = async function (name, yes = false,scripts='') {
   appPackageJSON.name = name;
   await cmdPromise(cwd, mkdirCmdString(name));
-  let frame = scripts ? (scripts.includes('vue')?'vue':'react'):'';
+  let frame = scripts && fs.existsSync(scripts) ? (scripts.includes('vue')?'vue':'react'):'';
   const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes,frame);
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './template/'), name));
-  await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './babelrc.js'), name+'/.babelrc.js'));
-  frame === 'react' && (await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './eslintrc.js'), name+'/.eslintrc.js')));
+  await cmdPromise(cwd, cpCmdString(require.resolve(frame === 'react' ? 'seus-utils/babelrc-react':'seus-utils/babelrc-vue'), name+'/.babelrc.js'));
+  frame === 'react' && (await cmdPromise(cwd, cpCmdString(require.resolve('seus-utils/eslintrc-react'), name+'/.eslintrc.js')));
   await cmdPromise(cwd, mkdirCmdString(name+'/src/components'));
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.entry || 'pages'}`));
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.copyPath || 'lib'}`));

@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {frame} = require('seus-utils');
+const babelrc = frame === 'react' ? require('seus-utils/babelrc-react') : require('seus-utils/babelrc-vue');
 const cwd = process.cwd();
 
 module.exports = {
@@ -62,7 +63,7 @@ module.exports = {
             }
             return [{
               loader:'babel-loader',
-              options:require('./.babelrc')
+              options:babelrc
             }]
           })(),
           ...(() =>

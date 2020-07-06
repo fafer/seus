@@ -1,31 +1,134 @@
 /* eslint-disable */
-;
-(function (e, t) {
-  function n() {
-    var t = r.getBoundingClientRect().width,
-      n = t / 7.5;
-    r.style.fontSize = n + "px", d.rem = e.rem = n
+(function (win, lib) {
+  var doc = win.document;
+  var docEl = doc.documentElement;
+  var metaEl = doc.querySelector('meta[name="viewport"]');
+  var flexibleEl = doc.querySelector('meta[name="flexible"]');
+  var dpr = 0;
+  var scale = 0;
+  var tid;
+  var flexible = lib.flexible || (lib.flexible = {});
+
+  if (metaEl) {
+    console.warn('将根据已有的meta标签来设置缩放比例');
+    var match = metaEl.getAttribute('content').match(/initial\-scale=([\d\.]+)/);
+    if (match) {
+      scale = parseFloat(match[1]);
+      dpr = parseInt(1 / scale);
+    }
+  } else if (flexibleEl) {
+    var content = flexibleEl.getAttribute('content');
+    if (content) {
+      var initialDpr = content.match(/initial\-dpr=([\d\.]+)/);
+      var maximumDpr = content.match(/maximum\-dpr=([\d\.]+)/);
+      if (initialDpr) {
+        dpr = parseFloat(initialDpr[1]);
+        scale = parseFloat((1 / dpr).toFixed(2));
+      }
+      if (maximumDpr) {
+        dpr = parseFloat(maximumDpr[1]);
+        scale = parseFloat((1 / dpr).toFixed(2));
+      }
+    }
   }
-  var i, o = e.document,
-    r = o.documentElement,
-    a = 0,
-    d = t.flexible || (t.flexible = {}),
-    s = e.navigator.appVersion.match(/iphone/gi),
-    m = e.devicePixelRatio;
-  a = s ? m >= 3 && (!a || a >= 3) ? 3 : m >= 2 && (!a || a >= 2) ? 2 : 1 : 1, r.setAttribute("data-dpr", a), "complete" === o.readyState ? o.body.style.fontSize = "12px" : o.addEventListener("DOMContentLoaded", function () {
-    o.body.style.fontSize = "12px"
-  }, !1);
-  var p = "onorientationchange" in window ? "orientationchange" : "resize";
-  e.addEventListener(p, function () {
-    clearTimeout(i), i = setTimeout(n, 300)
-  }, !1), e.addEventListener("pageshow", function (e) {
-    e.persisted && (clearTimeout(i), i = setTimeout(n, 300))
-  }, !1), n(), d.dpr = e.dpr = a, d.refreshRem = n, d.rem2px = function (e) {
-    var t = parseFloat(e) * this.rem;
-    return "string" == typeof e && e.match(/rem$/) && (t += "px"), t
-  }, d.px2rem = function (e) {
-    var t = parseFloat(e) / this.rem;
-    return "string" == typeof e && e.match(/px$/) && (t += "rem"), t
+
+  if (!dpr && !scale) {
+    var isAndroid = win.navigator.appVersion.match(/android/gi);
+    var isIPhone = win.navigator.appVersion.match(/iphone/gi);
+    var devicePixelRatio = win.devicePixelRatio;
+    if (isIPhone) {
+      // iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案
+      if (devicePixelRatio >= 3 && (!dpr || dpr >= 3)) {
+        dpr = 3;
+      } else if (devicePixelRatio >= 2 && (!dpr || dpr >= 2)) {
+        dpr = 2;
+      } else {
+        dpr = 1;
+      }
+    } else {
+      // 其他设备下，仍旧使用1倍的方案
+      dpr = 1;
+    }
+    scale = 1 / dpr;
   }
-})(window, window.lib || (window.lib = {}));
+
+  docEl.setAttribute('data-dpr', dpr);
+  if (!metaEl) {
+    metaEl = doc.createElement('meta');
+    metaEl.setAttribute('name', 'viewport');
+    metaEl.setAttribute('content', 'initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+    if (docEl.firstElementChild) {
+      docEl.firstElementChild.appendChild(metaEl);
+    } else {
+      var wrap = doc.createElement('div');
+      wrap.appendChild(metaEl);
+      doc.write(wrap.innerHTML);
+    }
+  }
+
+  function refreshRem() {
+    var width = docEl.getBoundingClientRect().width,
+      height = docEl.getBoundingClientRect().height;
+    // if (width / dpr > 540) {
+    //     width = 540 * dpr;
+    // }
+    var rem = width / 10;
+    docEl.style.fontSize = rem + 'px';
+    flexible.rem = win.rem = rem;
+    adjustRem();
+  }
+
+  function adjustRem() {
+    let html = document.documentElement,
+      body = document.getElementsByTagName('body')[0],
+      bodyW = body.style.width
+    body.style.width = '10rem' // 假如页面的视口宽度为10rem
+    let bodyWidth = body.getBoundingClientRect().width,
+      htmlWidth = html.getBoundingClientRect().width
+    if (bodyWidth != htmlWidth) {
+      var size = parseInt(html.style.fontSize) * htmlWidth / bodyWidth
+      html.style.fontSize = size + 'px'
+    }
+    body.style.width = bodyW
+  }
+
+  win.addEventListener('resize', function () {
+    clearTimeout(tid);
+    tid = setTimeout(refreshRem, 300);
+  }, false);
+  win.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      clearTimeout(tid);
+      tid = setTimeout(refreshRem, 300);
+    }
+  }, false);
+
+  if (doc.readyState === 'complete') {
+    doc.body.style.fontSize = 12 * dpr + 'px';
+  } else {
+    doc.addEventListener('DOMContentLoaded', function (e) {
+      doc.body.style.fontSize = 12 * dpr + 'px';
+    }, false);
+  }
+
+  refreshRem();
+
+  flexible.dpr = win.dpr = dpr;
+  flexible.refreshRem = refreshRem;
+  flexible.rem2px = function (d) {
+    var val = parseFloat(d) * this.rem;
+    if (typeof d === 'string' && d.match(/rem$/)) {
+      val += 'px';
+    }
+    return val;
+  };
+  flexible.px2rem = function (d) {
+    var val = parseFloat(d) / this.rem;
+    if (typeof d === 'string' && d.match(/px$/)) {
+      val += 'rem';
+    }
+    return val;
+  };
+
+})(window, window['lib'] || (window['lib'] = {}));
 /* eslint-enable */

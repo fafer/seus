@@ -4,7 +4,8 @@ const {
   BUILD,
   BUILDFTP,
   BUILDFCM,
-  BUILDDLL
+  BUILDDLL,
+  BUILDBUNDLEANALY
 } = require('../../scripts/build/buildType');
 const CommandProcessor = require('./commandProcessor');
 class CommandProcessorFactory {
@@ -45,6 +46,10 @@ class CommandProcessorFactory {
         break;
       case 'build:dll':
         cli.flags.buildType = BUILDDLL;
+        Processor = require('./buildCommandProcessor');
+        break;
+      case 'build:analy':
+        cli.flags.buildType = BUILDBUNDLEANALY;
         Processor = require('./buildCommandProcessor');
         break;
     }

@@ -53,6 +53,7 @@ module.exports = {
       'off',
       'always'
     ],
+    'no-fallthrough':'off',
     'require-atomic-updates':'off',
     'no-extra-boolean-cast':'off',
     'valid-jsdoc':'off',

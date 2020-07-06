@@ -1,1 +1,3 @@
-@import '../../common/rem.scss';
+@function pxtorem($px) {
+  @return $px/100px * 1rem;
+}

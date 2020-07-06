@@ -29,6 +29,7 @@
       "off",
       "always"
     ],
+    "no-fallthrough":"off",
     "no-extra-boolean-cast":"off",
     "class-methods-use-this":"off",
     "require-await":"off",

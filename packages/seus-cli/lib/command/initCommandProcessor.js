@@ -1,6 +1,8 @@
 const CommandProcessor = require('./commandProcessor');
 const init = require('../../scripts/init');
-
+const fs = require('fs');
+const path = require('path');
+const cwd = process.cwd();
 class InitCommandProcessor extends CommandProcessor {
 
   constructor(cli) {
@@ -21,6 +23,8 @@ class InitCommandProcessor extends CommandProcessor {
 
         `
       );
+    } else if (fs.existsSync(path.resolve(cwd,this.name))) {
+      console.log(`${path.resolve(cwd,this.name)} already exists！`);
     } else {
       init(this.name,this.yes,this.scripts);
     }

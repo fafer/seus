@@ -9,6 +9,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtraHtmlWebpackPlugin = require('./plugins/extra-html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const argv = require('yargs').argv;
 
 function htmlPlugin() {
@@ -64,6 +65,10 @@ module.exports = Merge(CommonConfig, {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
+    ...(function() {
+      if(process.env.BUNDLE_ANALY === 'bundle-analy') return [new BundleAnalyzerPlugin()];
+      return [];
+    })(),
     ...htmlPlugin(),
     new ManifestPlugin({
       basePath: conf.BASEPATH,

@@ -10,7 +10,10 @@
 		"prettier": "prettier '**/*.js' --trailing-comma es5 --single-quote --write",
 		"link": "cd packages/seus-cli && npm unlink && npm link",
 		"clean": "git clean -dfqX -- ./node_modules **/{dist,node_modules}/ ./package-lock.json **/package-lock.json ./packages/**/logs",
-		"clean:log": "git clean -dfqX -- ./packages/**/logs",
+    "clean:log": "git clean -dfqX -- ./packages/**/logs",
+    "create-react-app": "node scripts/initReact init",
+    "create-vue-app": "node scripts/initVue init",
+		"publish": "lerna publish",
 		"test": "jest --verbose"
 	},
 	"devDependencies": {
