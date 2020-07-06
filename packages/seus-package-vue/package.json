@@ -26,6 +26,6 @@
     "vue-router": "^3.0.3",
     "vuex": "^3.1.0",
     "vue-jsonp": "^0.1.8",
-    "seus-scripts": "^1.0.1"
+    "seus-scripts": "^1.0.3"
   }
 }
