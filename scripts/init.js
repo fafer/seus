@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 'use strict';
 
 const fs = require('fs');
@@ -25,56 +26,59 @@ const handleError = e => {
 process.on('SIGINT', handleExit);
 process.on('uncaughtException', handleError);
 
-const rootDir = path.join(__dirname, '..');
-const packagesDir = path.join(rootDir, 'packages');
-const packagePathsByName = {};
-fs.readdirSync(packagesDir).forEach(name => {
-  const packageDir = path.join(packagesDir, name);
-  const packageJson = path.join(packageDir, 'package.json');
-  if (fs.existsSync(packageJson)) {
-    packagePathsByName[name] = packageDir;
-  }
-});
-Object.keys(packagePathsByName).forEach(name => {
-  const packageJson = path.join(packagePathsByName[name], 'package.json');
-  const json = JSON.parse(fs.readFileSync(packageJson, 'utf8'));
-  Object.keys(packagePathsByName).forEach(otherName => {
-    if (json.dependencies && json.dependencies[otherName]) {
-      json.dependencies[otherName] = 'file:' + packagePathsByName[otherName];
-    }
-    if (json.devDependencies && json.devDependencies[otherName]) {
-      json.devDependencies[otherName] = 'file:' + packagePathsByName[otherName];
-    }
-    if (json.peerDependencies && json.peerDependencies[otherName]) {
-      json.peerDependencies[otherName] =
-        'file:' + packagePathsByName[otherName];
-    }
-    if (json.optionalDependencies && json.optionalDependencies[otherName]) {
-      json.optionalDependencies[otherName] =
-        'file:' + packagePathsByName[otherName];
+module.exports = function (frame = 'react') {
+  const rootDir = path.join(__dirname, '..');
+  const packagesDir = path.join(rootDir, 'packages');
+  const packagePathsByName = {};
+  fs.readdirSync(packagesDir).forEach(name => {
+    const packageDir = path.join(packagesDir, name);
+    const packageJson = path.join(packageDir, 'package.json');
+    if (fs.existsSync(packageJson)) {
+      packagePathsByName[name] = packageDir;
     }
   });
+  Object.keys(packagePathsByName).forEach(name => {
+    const packageJson = path.join(packagePathsByName[name], 'package.json');
+    const json = JSON.parse(fs.readFileSync(packageJson, 'utf8'));
+    Object.keys(packagePathsByName).forEach(otherName => {
+      if (json.dependencies && json.dependencies[otherName]) {
+        json.dependencies[otherName] = 'file:' + packagePathsByName[otherName];
+      }
+      if (json.devDependencies && json.devDependencies[otherName]) {
+        json.devDependencies[otherName] = 'file:' + packagePathsByName[otherName];
+      }
+      if (json.peerDependencies && json.peerDependencies[otherName]) {
+        json.peerDependencies[otherName] =
+          'file:' + packagePathsByName[otherName];
+      }
+      if (json.optionalDependencies && json.optionalDependencies[otherName]) {
+        json.optionalDependencies[otherName] =
+          'file:' + packagePathsByName[otherName];
+      }
+    });
 
-  fs.writeFileSync(packageJson, JSON.stringify(json, null, 2), 'utf8');
-});
+    fs.writeFileSync(packageJson, JSON.stringify(json, null, 2), 'utf8');
+  });
 
-const scriptsFileName = cp
-  .execSync('npm pack', { cwd: path.join(packagesDir, 'seus-package-react') })
-  .toString()
-  .trim();
-const scriptsPath = path.join(packagesDir, 'seus-package-react', scriptsFileName);
+  const scriptsFileName = cp
+    .execSync('npm pack', {
+      cwd: path.join(packagesDir, 'seus-package-' + frame)
+    })
+    .toString()
+    .trim();
+  const scriptsPath = path.join(packagesDir, 'seus-package-' + frame, scriptsFileName);
 
-cp.execSync('yarn cache clean');
+  cp.execSync('yarn cache clean');
 
-const args = process.argv.slice(2);
+  const args = process.argv.slice(2);
 
-const scriptPath = path.join(packagesDir, 'seus-cli', '/lib/index.js');
-cp.execSync(
-  `node ${scriptPath} ${args.join(' ')} --scripts="${scriptsPath}"`,
-  {
-    cwd: rootDir,
-    stdio: 'inherit',
-  }
-);
+  const scriptPath = path.join(packagesDir, 'seus-cli', '/lib/index.js');
+  cp.execSync(
+    `node ${scriptPath} ${args.join(' ')} --scripts="${scriptsPath}"`, {
+      cwd: rootDir,
+      stdio: 'inherit',
+    }
+  );
 
-handleExit();
+  handleExit();
+}

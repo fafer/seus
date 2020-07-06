@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs')
 const path = require('path');
 const spawnSync = require('child_process').spawnSync;
 
@@ -22,7 +22,7 @@ getPackages().forEach((p) => {
   // Skip link starter kit
   if (linkSkipPackages.some(skipPackage => p.endsWith(skipPackage))) {
     return;
-  };
+  }
   const linkArgv = ['link', p];
   console.log('npm', linkArgv.join(' '));
   spawnSync('npm', linkArgv);

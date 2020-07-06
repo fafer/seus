@@ -6,7 +6,7 @@ const {
   BUILDFCM,
   BUILDDLL
 } = require('../../scripts/build/buildType');
-
+const CommandProcessor = require('./commandProcessor');
 class CommandProcessorFactory {
   static createCommandProcessor(cli) {
     let Processor;

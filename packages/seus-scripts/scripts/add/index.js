@@ -70,6 +70,7 @@ function add(name, title = '') {
   }
   htmlTemp = htmlStr
     .replace(/\$\{base\}/gi, conf.PUBLICBASE)
+    .replace(/\$\{lib\}/gi, conf.CONFIG_COPY_PATH)
     .replace(
       /\$\{name\}/gi,
       `${conf.PREFIX}${conf.ENTRY_SEPERATE}${name}${

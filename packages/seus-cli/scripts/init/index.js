@@ -12,27 +12,33 @@ const appPackageJSON = {
   'name':'',
   'version': '1.0.0',
   'private': true,
-  "scripts": {
-    "start": "seus-scripts start",
-    "mock": "seus-scripts mock",
-    "build": "seus-scripts build",
-    "build:dll": "seus-scripts build:dll",
-    "build:ftp": "seus-scripts build:ftp",
-    "build:fcm": "seus-scripts build:fcm",
-    "add": "seus-scripts add",
-    "ftp": "seus-scripts ftp",
-    "fcm": "seus-scripts fcm"
+  'scripts': {
+    'start': 'seus-scripts start',
+    'mock': 'seus-scripts mock',
+    'build': 'seus-scripts build',
+    'build:dll': 'seus-scripts build:dll',
+    'build:ftp': 'seus-scripts build:ftp',
+    'build:fcm': 'seus-scripts build:fcm',
+    'add': 'seus-scripts add',
+    'ftp': 'seus-scripts ftp',
+    'fcm': 'seus-scripts fcm'
   },
   'dependencies':{},
-  "config": {
-    "seus": {
-      "frame": ""
+  'config': {
+    'seus': {
+      'frame': ''
+    },
+    'commitizen': {
+      'path': './node_modules/cz-conventional-changelog'
     }
+  },
+  'engines': {
+    'node': '>= 10.14.2'
   },
   'browserslist': packageJSON.browserslist
 };
 
-async function initConfig(filePath,yes=false) {
+async function initConfig(filePath,yes=false,frame='') {
   console.log(chalk.cyan('init config ...'));
   const publicBase = '/'+appPackageJSON.name;
   const answer = !yes ? await inquirer.prompt([
@@ -56,18 +62,60 @@ async function initConfig(filePath,yes=false) {
       message: chalk.green('common assets path:'),
       default:conf.copyPath
     },
-    {
-      name: 'frame',
-      message: chalk.green('use react(0) or vue(1):'),
-      default:0
-    }
-  ]):{seperate:'/',publicBase,entry:conf.entry,copyPath:conf.copyPath,frame:0};
+    ...(function() {
+      if(frame) return [];
+      return [
+        {
+          type: 'list',
+          name: 'frame',
+          message: chalk.green('use react or vue'),
+          choices: [
+            'react',
+            'vue',
+            new inquirer.Separator(
+              chalk.reset(
+                '↑ ↓ to select. Control-C to cancel.'
+              )
+            ),
+          ]
+        }
+      ]
+    })()
+  ]):{seperate:'/',publicBase,entry:conf.entry,copyPath:conf.copyPath,frame:'react'};
+  if(frame) answer.frame = frame;
   conf.seperate = answer.seperate;
   conf.publicBase = answer.publicBase;
   conf.entry = answer.entry;
   conf.copyPath = answer.copyPath;
-  if(answer.frame === 0) conf.vendor = ['react', 'react-dom', '@babel/polyfill'];
-  else conf.vendor = ['vue', '@babel/polyfill'];
+  if(answer.frame === 'react') {
+    conf.vendor = ['react', 'react-dom', '@babel/polyfill'];
+    appPackageJSON['lint-staged'] = {
+      '*.{js,jsx}': [
+        'npm run eslint',
+        'git add'
+      ],
+      '*.{ts,tsx}': [
+        'npm run tslint',
+        'git add'
+      ],
+      '*.{css,scss}': [
+        'npm run stylelint',
+        'git add'
+      ]
+    };
+    appPackageJSON['husky'] = {
+      'hooks': {
+        'pre-commit': 'lint-staged',
+        'commit-msg': 'validate-commit-msg'
+      }
+    },
+    appPackageJSON.scripts.eslint = 'eslint . --ext .js,.jsx --fix';
+    appPackageJSON.scripts.tslint = 'tslint src/**/*.{ts,tsx} --fix';
+    appPackageJSON.scripts.stylelint = 'stylelint  src/**/*.{css,scss} --fix';
+    appPackageJSON.scripts.lint = 'npm run eslint && npm run tslint && npm run stylelint';
+  } else {
+    conf.vendor = ['vue', '@babel/polyfill'];
+  }
   fs.writeFileSync(filePath,JSON.stringify(conf, null, 2) + os.EOL);
   return answer;
 }
@@ -84,15 +132,17 @@ function shouldUseYarn() {
 module.exports = async function (name, yes = false,scripts='') {
   appPackageJSON.name = name;
   await cmdPromise(cwd, mkdirCmdString(name));
-  const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes);
+  let frame = scripts ? (scripts.includes('vue')?'vue':'react'):'';
+  const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes,frame);
   await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './template/'), name));
-  await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './.babelrc.js'), name+'/.babelrc.js'));
+  await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './babelrc.js'), name+'/.babelrc.js'));
+  frame === 'react' && (await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './eslintrc.js'), name+'/.eslintrc.js')));
   await cmdPromise(cwd, mkdirCmdString(name+'/src/components'));
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.entry || 'pages'}`));
   await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.copyPath || 'lib'}`));
-  appPackageJSON.config.seus.frame = answer.frame === 0 ? 'react' : 'vue';
+  appPackageJSON.config.seus.frame = answer.frame;
   fs.writeFileSync(path.posix.join(cwd,name+'/package.json'),JSON.stringify(appPackageJSON, null, 2) + os.EOL);
-  const dependencies = answer.frame === 0 ? [scripts || 'seus-package-react']:[scripts || 'seus-package-vue'];
+  const dependencies = answer.frame === 'react' ? [scripts || 'seus-package-react']:[scripts || 'seus-package-vue'];
   console.log(`Installing ${chalk.cyan(dependencies.join(' '))}`);
   let command,args;
   if(shouldUseYarn()) {

@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {frame} = require('seus-utils');
+const cwd = process.cwd();
 
 module.exports = {
   entry: conf.getEntry(),
@@ -14,36 +15,48 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      },
-      // {
-      //   test: /\.js$/,
-      //   include: [path.join(__dirname, '../src'), __dirname],
-      //   enforce: 'pre',
-      //   loader: 'eslint-loader',
-      //   options: {
-      //     fix: true
-      //   }
-      // },
-      // {
-      //   test: /\.ts$/,
-      //   include: [path.join(__dirname, '../src'), __dirname],
-      //   exclude: /node_modules/,
-      //   enforce: 'pre',
-      //   loader: 'tslint-loader',
-      //   options: {
-      //     fix: true,
-      //   },
-      // },
+      ...(function() {
+        let rules;
+        if(frame === 'react') {
+          rules = [
+            {
+              test: /\.jsx?$/,
+              include: [cwd],
+              exclude: /node_modules/,
+              enforce: 'pre',
+              loader: 'eslint-loader',
+              options: {
+                fix: true
+              }
+            },
+            {
+              test: /\.tsx?$/,
+              include: [cwd],
+              exclude: /node_modules/,
+              enforce: 'pre',
+              loader: 'tslint-loader',
+              options: {
+                fix: true,
+              },
+            }
+          ]
+        } else {
+          rules = [
+            {
+              test: /\.vue$/,
+              loader: 'vue-loader',
+            }
+          ]
+        }
+        return rules;
+      })(),
       {
         test: /\.(jsx?|tsx?)$/,
         use: [
           ...(function() {
-            let temp1 = path.resolve(process.cwd(),'.babelrc.js'),
-              temp2 = path.resolve(process.cwd(),'.babelrc.json'),
-              temp3 = path.resolve(process.cwd(),'.babelrc');
+            let temp1 = path.resolve(cwd,'.babelrc.js'),
+              temp2 = path.resolve(cwd,'.babelrc.json'),
+              temp3 = path.resolve(cwd,'.babelrc');
             if(fs.existsSync(temp1)|| fs.existsSync(temp2) || fs.existsSync(temp3)) {
               return ['babel-loader'];
             }
