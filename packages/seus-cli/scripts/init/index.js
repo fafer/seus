@@ -141,7 +141,7 @@ module.exports = async function (name, yes = false,scripts='') {
   fs.mkdirSync(name+'/src/components');
   fs.copyFileSync(path.resolve(__dirname, 'template/src/common/rem.js'),name+'/src/common/rem.js');
   fs.copyFileSync(path.resolve(__dirname, 'template/src/common/reset.css'),name+'/src/common/reset.css');
-  fs.copyFileSync(path.resolve(__dirname, 'template/.gitignore'),name+'/gitignore');
+  fs.copyFileSync(path.resolve(__dirname, 'template/gitignore'),name+'/.gitignore');
   fs.copyFileSync(path.resolve(__dirname, 'template/README.md'),name+'/README.md');
   fs.copyFileSync(require.resolve(frame === 'react' ? 'seus-utils/babelrc-react':'seus-utils/babelrc-vue'), name+'/.babelrc.js');
   frame === 'react' && (fs.copyFileSync(require.resolve('seus-utils/eslintrc-react'), name+'/.eslintrc.js'));
