@@ -3,20 +3,22 @@
 	"author": "fafer",
 	"license": "MIT",
 	"scripts": {
-		"postinstall": "npm run init",
+		"postinstall": "node scripts/prepackage && npm run init",
 		"init": "lerna bootstrap --no-ci",
 		"start": "node scripts/init",
 		"eslint": "eslint . --ext .js --fix",
 		"prettier": "prettier '**/*.js' --trailing-comma es5 --single-quote --write",
 		"link": "cd packages/seus-cli && npm unlink && npm link",
 		"clean": "git clean -dfqX -- ./node_modules **/{dist,node_modules}/ ./package-lock.json **/package-lock.json ./packages/**/logs",
-    "clean:log": "git clean -dfqX -- ./packages/**/logs",
-    "create-react-app": "node scripts/initReact init",
-    "create-vue-app": "node scripts/initVue init",
+		"clean:log": "git clean -dfqX -- ./packages/**/logs",
+		"create-react-app": "node scripts/initReact init",
+		"create-vue-app": "node scripts/initVue init",
 		"publish": "lerna publish",
 		"test": "jest --verbose"
 	},
 	"devDependencies": {
+		"cross-spawn": "^6.0.5",
+		"cz-conventional-changelog": "^3.2.0",
 		"eslint": "^6.1.0",
 		"husky": "^3.0.1",
 		"jest": "^24.8.0",
@@ -27,8 +29,7 @@
 		"lerna-changelog": "^0.8.2",
 		"lint-staged": "^9.2.0",
 		"prettier": "^1.18.2",
-		"validate-commit-msg": "^2.14.0",
-		"cz-conventional-changelog": "^3.2.0"
+		"validate-commit-msg": "^2.14.0"
 	},
 	"husky": {
 		"hooks": {

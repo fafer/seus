@@ -67,8 +67,12 @@ module.exports = function (frame = 'react') {
     .toString()
     .trim();
   const scriptsPath = path.join(packagesDir, 'seus-package-' + frame, scriptsFileName);
-
-  cp.execSync('yarn cache clean');
+  
+  try {
+    cp.execSync('yarn cache clean');
+  } catch (e) {
+    console.log(e)
+  }
 
   const args = process.argv.slice(2);
 
