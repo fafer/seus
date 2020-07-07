@@ -143,7 +143,7 @@ module.exports = async function (name, yes = false,scripts='') {
   fs.copyFileSync(path.resolve(__dirname, 'template/src/common/reset.css'),name+'/src/common/reset.css');
   fs.copyFileSync(path.resolve(__dirname, 'template/gitignore'),name+'/.gitignore');
   fs.copyFileSync(path.resolve(__dirname, 'template/README.md'),name+'/README.md');
-  fs.copyFileSync(require.resolve(frame === 'react' ? 'seus-utils/babelrc-react':'seus-utils/babelrc-vue'), name+'/.babelrc.js');
+  fs.copyFileSync(require.resolve(answer.frame === 'react' ? 'seus-utils/babelrc-react':'seus-utils/babelrc-vue'), name+'/.babelrc.js');
   frame === 'react' && (fs.copyFileSync(require.resolve('seus-utils/eslintrc-react'), name+'/.eslintrc.js'));
   fs.mkdirSync(name+`/src/${conf.entry || 'pages'}`);
   fs.mkdirSync(name+`/src/${conf.copyPath || 'lib'}`);
