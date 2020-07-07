@@ -8,6 +8,7 @@ const execSync = require('child_process').execSync;
 const spawn = require('cross-spawn');
 const cwd = process.cwd();
 const packageJSON = require('../../package.json');
+const prepackage = require('./prepackage');
 const appPackageJSON = {
   'name':'',
   'version': '1.0.0',
@@ -165,6 +166,7 @@ module.exports = async function (name, yes = false,scripts='') {
   }
   args.push('--cwd');
   args.push(path.resolve(cwd,name));
+  await prepackage();
   const child = spawn(command, args, { stdio: 'inherit' });
   child.on('close', async code => {
     if (code !== 0) {
