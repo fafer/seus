@@ -71,7 +71,7 @@ module.exports = function (frame = 'react') {
   try {
     cp.execSync('yarn cache clean');
   } catch (e) {
-    console.log(e)
+    console.log('');
   }
 
   const args = process.argv.slice(2);

@@ -19,8 +19,8 @@ module.exports = function() {
   return new Promise((resolve) => {
     if(getPlatform() === PLATFORM.WINDOWS) {
       try {
-        const result = execSync('npm list mirror-config-china -g', { stdio: 'ignore' }).toString();
-        if(!result.includes('mirror-config-china')) {
+        const result = execSync('npm list mirror-config-china -g', { stdio: 'ignore' });
+        if(!result.toString().includes('mirror-config-china')) {
           const child = spawn('npm', [
             'i',
             '-g',
@@ -32,7 +32,6 @@ module.exports = function() {
           });
         }
       } catch (e) {
-        console.log(e);
         resolve();
       }
     }

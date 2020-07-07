@@ -102,14 +102,14 @@ function mkdirCmdString(dirPath) {
   if (os.platform() != 'win32') {
     return `mkdir -p ${dirPath}`;
   }
-  return `mkdir -p ${dirPath}`;
+  return `mkdir ${dirPath}`;
 }
 
 function cpCmdString(filePath, destPath) {
   if (os.platform() != 'win32') {
     return `cp -rf ${filePath} ${destPath}`;
   }
-  return `cp -rf ${filePath} ${destPath}`;
+  return `xcopy ${filePath} ${destPath} /s /e /y`;
 }
 
 module.exports = {

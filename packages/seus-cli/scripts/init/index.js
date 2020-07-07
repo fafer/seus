@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
-const {conf,cliCommand:{cmdPromise,mkdirCmdString,cpCmdString}} = require('seus-utils');
+const {conf,cliCommand:{cmdPromise}} = require('seus-utils');
 const inquirer = require('inquirer');
 const execSync = require('child_process').execSync;
 const spawn = require('cross-spawn');
@@ -133,15 +133,20 @@ function shouldUseYarn() {
 
 module.exports = async function (name, yes = false,scripts='') {
   appPackageJSON.name = name;
-  await cmdPromise(cwd, mkdirCmdString(name));
+  fs.mkdirSync(path.join(cwd,name));
   let frame = scripts && fs.existsSync(scripts) ? (scripts.includes('vue')?'vue':'react'):'';
   const answer = await initConfig(path.posix.join(cwd,name+'/seus.config.json'),yes,frame);
-  await cmdPromise(cwd, cpCmdString(path.posix.join(__dirname, './template/'), name));
-  await cmdPromise(cwd, cpCmdString(require.resolve(frame === 'react' ? 'seus-utils/babelrc-react':'seus-utils/babelrc-vue'), name+'/.babelrc.js'));
-  frame === 'react' && (await cmdPromise(cwd, cpCmdString(require.resolve('seus-utils/eslintrc-react'), name+'/.eslintrc.js')));
-  await cmdPromise(cwd, mkdirCmdString(name+'/src/components'));
-  await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.entry || 'pages'}`));
-  await cmdPromise(cwd, mkdirCmdString(name+`/src/${conf.copyPath || 'lib'}`));
+  fs.mkdirSync(name+'/src');
+  fs.mkdirSync(name+'/src/common');
+  fs.mkdirSync(name+'/src/components');
+  fs.copyFileSync(path.resolve(__dirname, 'template/src/common/rem.js'),name+'/src/common/rem.js');
+  fs.copyFileSync(path.resolve(__dirname, 'template/src/common/reset.css'),name+'/src/common/reset.css');
+  fs.copyFileSync(path.resolve(__dirname, 'template/.gitignore'),name+'/.gitignore');
+  fs.copyFileSync(path.resolve(__dirname, 'template/README.md'),name+'/README.md');
+  fs.copyFileSync(require.resolve(frame === 'react' ? 'seus-utils/babelrc-react':'seus-utils/babelrc-vue'), name+'/.babelrc.js');
+  frame === 'react' && (fs.copyFileSync(require.resolve('seus-utils/eslintrc-react'), name+'/.eslintrc.js'));
+  fs.mkdirSync(name+`/src/${conf.entry || 'pages'}`);
+  fs.mkdirSync(name+`/src/${conf.copyPath || 'lib'}`);
   appPackageJSON.config.seus.frame = answer.frame;
   fs.writeFileSync(path.posix.join(cwd,name+'/package.json'),JSON.stringify(appPackageJSON, null, 2) + os.EOL);
   const dependencies = answer.frame === 'react' ? [scripts || 'seus-package-react']:[scripts || 'seus-package-vue'];
