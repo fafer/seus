@@ -24,8 +24,9 @@ module.exports = function() {
           const child = spawn('npm', [
             'i',
             '-g',
-            '--registry=http://registry.npm.taobao.org',
-            'mirror-config-china'
+            'mirror-config-china',
+            '--registry',
+            'http://registry.npm.taobao.org'
           ], { stdio: 'inherit' });
           child.on('close', () => {
             resolve();

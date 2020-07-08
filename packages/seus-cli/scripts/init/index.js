@@ -165,8 +165,9 @@ module.exports = async function (name, yes = false,scripts='') {
       '--save',
       '--save-exact',
       '--loglevel',
-      '--registry=http://registry.npm.taobao.org',
-      'error'
+      'error',
+      '--registry',
+      'http://registry.npm.taobao.org'
     ].concat(dependencies);
   }
   args.push('--cwd');
