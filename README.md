@@ -15,5 +15,5 @@ npm i -g seus-cli
 ```hash
 seus init project
 
-seuse init project --yes 默认创建 react 项目
+seus init project --yes 默认创建 react 项目
 ```
