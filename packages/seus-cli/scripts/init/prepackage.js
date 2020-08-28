@@ -15,27 +15,42 @@ function getPlatform() {
   }
 }
 
+function checkPkg(name,resolve) {
+  try {
+    const result = execSync(`npm list ${name} -g`, { stdio: 'ignore' });
+    if(!result.toString().includes(name)) {
+      installPkg(name,resolve);
+    }
+  } catch (e) {
+    installPkg(name,resolve);
+  }
+}
+
+function installPkg(name,resolve) {
+  try {
+    const child = spawn('npm', [
+      'i',
+      '-g',
+      name,
+      '--registry',
+      'http://registry.npm.taobao.org'
+    ], { stdio: 'inherit' });
+    child.on('close', () => {
+      resolve();
+    });
+  } catch (e) {
+    resolve();
+  }
+}
+
 module.exports = function() {
   return new Promise((resolve) => {
-    if(getPlatform() === PLATFORM.WINDOWS) {
-      try {
-        const result = execSync('npm list mirror-config-china -g', { stdio: 'ignore' });
-        if(!result.toString().includes('mirror-config-china')) {
-          const child = spawn('npm', [
-            'i',
-            '-g',
-            'mirror-config-china',
-            '--registry',
-            'http://registry.npm.taobao.org'
-          ], { stdio: 'inherit' });
-          child.on('close', () => {
-            resolve();
-          });
-        }
-      } catch (e) {
+    checkPkg('yarn',() => {
+      if(getPlatform() === PLATFORM.WINDOWS) {
+        checkPkg('mirror-config-china',resolve)
+      } else {
         resolve();
       }
-    }
-    resolve();
+    });
   })
 }

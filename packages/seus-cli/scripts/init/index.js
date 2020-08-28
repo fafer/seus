@@ -151,6 +151,7 @@ module.exports = async function (name, yes = false,scripts='') {
   fs.writeFileSync(path.posix.join(cwd,name+'/package.json'),JSON.stringify(appPackageJSON, null, 2) + os.EOL);
   const dependencies = answer.frame === 'react' ? [scripts || 'seus-package-react']:[scripts || 'seus-package-vue'];
   console.log(`Installing ${chalk.cyan(dependencies.join(' '))}`);
+  await prepackage();
   let command,args;
   if(shouldUseYarn()) {
     command = 'yarn';
@@ -172,7 +173,6 @@ module.exports = async function (name, yes = false,scripts='') {
   }
   args.push('--cwd');
   args.push(path.resolve(cwd,name));
-  await prepackage();
   const child = spawn(command, args, { stdio: 'inherit' });
   child.on('close', async code => {
     if (code !== 0) {
