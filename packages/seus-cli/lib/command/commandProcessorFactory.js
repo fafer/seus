@@ -7,7 +7,7 @@ class CommandProcessorFactory {
         Processor = require('./initCommandProcessor');
         break;
     }
-    return Processor ? new Processor(cli):new CommandProcessor(cli);
+    return Processor ? new Processor(cli) : new CommandProcessor(cli);
   }
 }
 

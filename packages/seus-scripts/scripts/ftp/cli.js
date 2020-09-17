@@ -16,23 +16,23 @@ function getIndex(index) {
   return index;
 }
 
-module.exports = async function(index,all) {
-  const {FTP,OUT_PATH,PUBLICBASE} = require('../../conf');
-  FTP.forEach(({host,port,user,password,srcPath,destPath}) => {
-    let temp = {host,port,user,password};
-    if(!srcPath) temp.srcPath = OUT_PATH;
+module.exports = async function(index, all) {
+  const { FTP, OUT_PATH, PUBLICBASE } = require('../../conf');
+  FTP.forEach(({ host, port, user, password, srcPath, destPath }) => {
+    let temp = { host, port, user, password };
+    if (!srcPath) temp.srcPath = OUT_PATH;
     else temp.srcPath = srcPath;
-    if(!destPath) temp.destPath = path.posix.join('/', PUBLICBASE);
+    if (!destPath) temp.destPath = path.posix.join('/', PUBLICBASE);
     else temp.destPath = destPath;
     servers.push(temp);
   });
-  if(!servers.length) {
+  if (!servers.length) {
     console.log(chalk.cyan('seus.config.json has not ftp config'));
     return;
   }
   const options = {
     index: getIndex(index),
-    all
+    all,
   };
   if (options.all) {
     const choices = table(servers.map(d => Object.values(d))).split('\n');
@@ -52,9 +52,9 @@ module.exports = async function(index,all) {
               '↑ ↓ to select. Enter to start upload. Control-C to cancel.'
             )
           ),
-          new inquirer.Separator(' ')
-        ]
-      }
+          new inquirer.Separator(' '),
+        ],
+      },
     ]);
     return servers[getIndex(answer.host)];
   }

@@ -31,17 +31,17 @@ const cli = meow(
       },
       all: {
         type: 'boolean',
-        alias: 'a'
+        alias: 'a',
       },
       component: {
         type: 'string',
-        alias: 'c'
+        alias: 'c',
       },
       title: {
         type: 'string',
-        alias: 't'
-      }
-    }
+        alias: 't',
+      },
+    },
   }
 );
 seusScriptsCli(cli);

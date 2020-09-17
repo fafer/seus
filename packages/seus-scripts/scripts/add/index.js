@@ -1,14 +1,14 @@
 const conf = require('../../conf');
 const path = require('path');
 const fs = require('fs');
-const {frame} = require('seus-utils');
-let templateDir = path.join(__dirname, './template',frame);
+const { frame } = require('seus-utils');
+let templateDir = path.join(__dirname, './template', frame);
 let pageTemplateDir = path.join(templateDir, 'page');
 let componentTemplateDir = path.join(templateDir, 'component');
 
 let htmlTemplate = 'index.html';
 
-let scriptTemplate = frame === 'react'?'index.jsx':'index.js';
+let scriptTemplate = frame === 'react' ? 'index.jsx' : 'index.js';
 
 let htmlTemplatePath = path.join(pageTemplateDir, htmlTemplate);
 
@@ -26,18 +26,26 @@ function addComponent(name) {
       path.join(componentPath, 'index.scss'),
       function() {}
     );
-    if(frame === 'react') {
-      let scriptStrTemp = fs.readFileSync(path.join(componentTemplateDir,'index.jsx')).toString();
-      scriptStrTemp = scriptStrTemp
-        .replace(
-          /\$\{Component\}/gi,
-          name.charAt(0).toUpperCase() + name.substring(1)
-        );
-      fs.writeFile(path.join(componentPath, 'index.jsx'), scriptStrTemp, err => {
-        if (err) {
-          console.error(`write ${path.join(componentPath, 'index.jsx')} failed`, err);
+    if (frame === 'react') {
+      let scriptStrTemp = fs
+        .readFileSync(path.join(componentTemplateDir, 'index.jsx'))
+        .toString();
+      scriptStrTemp = scriptStrTemp.replace(
+        /\$\{Component\}/gi,
+        name.charAt(0).toUpperCase() + name.substring(1)
+      );
+      fs.writeFile(
+        path.join(componentPath, 'index.jsx'),
+        scriptStrTemp,
+        err => {
+          if (err) {
+            console.error(
+              `write ${path.join(componentPath, 'index.jsx')} failed`,
+              err
+            );
+          }
         }
-      });
+      );
     } else {
       fs.copyFile(
         path.join(componentTemplateDir, 'index.vue'),
@@ -99,9 +107,9 @@ function add(name, title = '') {
   });
 }
 
-module.exports = function(filename='',{title='',component=''}) {
-  if(filename) add(filename || '', title || '');
-  if(component && component !== filename) {
+module.exports = function(filename = '', { title = '', component = '' }) {
+  if (filename) add(filename || '', title || '');
+  if (component && component !== filename) {
     addComponent(component);
   }
-}
+};

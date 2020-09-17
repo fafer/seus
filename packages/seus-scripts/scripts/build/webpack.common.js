@@ -4,8 +4,11 @@ const fs = require('fs');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const {frame} = require('seus-utils');
-const babelrc = frame === 'react' ? require('seus-utils/babelrc-react') : require('seus-utils/babelrc-vue');
+const { frame } = require('seus-utils');
+const babelrc =
+  frame === 'react'
+    ? require('seus-utils/babelrc-react')
+    : require('seus-utils/babelrc-vue');
 const cwd = process.cwd();
 
 module.exports = {
@@ -18,7 +21,7 @@ module.exports = {
     rules: [
       ...(function() {
         let rules;
-        if(frame === 'react') {
+        if (frame === 'react') {
           rules = [
             {
               test: /\.jsx?$/,
@@ -27,8 +30,8 @@ module.exports = {
               enforce: 'pre',
               loader: 'eslint-loader',
               options: {
-                fix: true
-              }
+                fix: true,
+              },
             },
             {
               test: /\.tsx?$/,
@@ -39,15 +42,15 @@ module.exports = {
               options: {
                 fix: true,
               },
-            }
-          ]
+            },
+          ];
         } else {
           rules = [
             {
               test: /\.vue$/,
               loader: 'vue-loader',
-            }
-          ]
+            },
+          ];
         }
         return rules;
       })(),
@@ -55,16 +58,22 @@ module.exports = {
         test: /\.(jsx?|tsx?)$/,
         use: [
           ...(function() {
-            let temp1 = path.resolve(cwd,'.babelrc.js'),
-              temp2 = path.resolve(cwd,'.babelrc.json'),
-              temp3 = path.resolve(cwd,'.babelrc');
-            if(fs.existsSync(temp1)|| fs.existsSync(temp2) || fs.existsSync(temp3)) {
+            let temp1 = path.resolve(cwd, '.babelrc.js'),
+              temp2 = path.resolve(cwd, '.babelrc.json'),
+              temp3 = path.resolve(cwd, '.babelrc');
+            if (
+              fs.existsSync(temp1) ||
+              fs.existsSync(temp2) ||
+              fs.existsSync(temp3)
+            ) {
               return ['babel-loader'];
             }
-            return [{
-              loader:'babel-loader',
-              options:babelrc
-            }]
+            return [
+              {
+                loader: 'babel-loader',
+                options: babelrc,
+              },
+            ];
           })(),
           ...(() =>
             process.env.MOCK_DATA === 'mock'
@@ -157,44 +166,55 @@ module.exports = {
     modules: ['node_modules', path.resolve(__dirname, 'loaders')],
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json', ...(function() {
-      if(frame === 'react') return ['.jsx','.tsx'];
-      return ['.vue'];
-    })(), '.css', '.scss'],
+    extensions: [
+      '.ts',
+      '.js',
+      '.json',
+      ...(function() {
+        if (frame === 'react') return ['.jsx', '.tsx'];
+        return ['.vue'];
+      })(),
+      '.css',
+      '.scss',
+    ],
     alias: {
       ...(function() {
-        if(frame === 'vue') return {
-          vue$: 'vue/dist/vue.esm.js',
-        }
+        if (frame === 'vue')
+          return {
+            vue$: 'vue/dist/vue.esm.js',
+          };
         return {};
       })(),
-      ...conf.ALIAS
+      ...conf.ALIAS,
     },
   },
   plugins: [
     new webpack.DllReferencePlugin({
-      manifest: require(path.join(conf.COPY_PATH, 'vendor-manifest.json'))
+      manifest: require(path.join(conf.COPY_PATH, 'vendor-manifest.json')),
     }),
     ...(function() {
-      if(!conf.CONFIG_COPY_PATH || !fs.existsSync(conf.COPY_PATH)) return [];
-      return [new CopyWebpackPlugin([
-        {
-          from: conf.COPY_PATH,
-          to: conf.COPY_DEST_PATH,
-        },
-      ])]
+      if (!conf.CONFIG_COPY_PATH || !fs.existsSync(conf.COPY_PATH)) return [];
+      return [
+        new CopyWebpackPlugin([
+          {
+            from: conf.COPY_PATH,
+            to: conf.COPY_DEST_PATH,
+          },
+        ]),
+      ];
     })(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].css',
     }),
     ...(function() {
-      let VueLoaderPlugin,plugins = [];
-      if(frame === 'vue') {
+      let VueLoaderPlugin,
+        plugins = [];
+      if (frame === 'vue') {
         VueLoaderPlugin = require('vue-loader/lib/plugin');
         plugins.push(new VueLoaderPlugin());
       }
       return plugins;
-    })()
+    })(),
   ],
 };

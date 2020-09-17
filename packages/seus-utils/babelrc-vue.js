@@ -1,16 +1,13 @@
 module.exports = {
-  'presets': [
-    '@babel/preset-env',
-    '@babel/preset-typescript'
-  ],
-  'plugins': [
+  presets: ['@babel/preset-env', '@babel/preset-typescript'],
+  plugins: [
     '@babel/plugin-transform-runtime',
     // Stage 2
     [
       '@babel/plugin-proposal-decorators',
       {
-        'legacy': true
-      }
+        legacy: true,
+      },
     ],
     '@babel/plugin-proposal-function-sent',
     '@babel/plugin-proposal-export-namespace-from',
@@ -22,8 +19,8 @@ module.exports = {
     [
       '@babel/plugin-proposal-class-properties',
       {
-        'loose': false
-      }
+        loose: false,
+      },
     ],
     '@babel/plugin-proposal-object-rest-spread',
     '@babel/plugin-proposal-json-strings',
@@ -31,9 +28,9 @@ module.exports = {
     [
       '@babel/plugin-transform-typescript',
       {
-        'isTSX': true,
-        'allExtensions':true
-      }
-    ]
-  ]
-}
+        isTSX: true,
+        allExtensions: true,
+      },
+    ],
+  ],
+};

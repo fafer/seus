@@ -1,4 +1,4 @@
-const {START,MOCK, BUILDDLL,BUILDBUNDLEANALY} = require('./buildType');
+const { START, MOCK, BUILDDLL, BUILDBUNDLEANALY } = require('./buildType');
 
 class Build {
   constructor(buildType) {
@@ -6,7 +6,7 @@ class Build {
   }
 
   async buildEnv() {
-    switch(this.buildType) {
+    switch (this.buildType) {
       case MOCK:
         process.env.MOCK_DATA = 'mock';
       case START:
@@ -29,25 +29,30 @@ class Build {
     const webpack = require('webpack');
     const devConf = require('./webpack.config.dev.js');
     const compiler = webpack(devConf);
-    const server = new (require('webpack-dev-server'))(compiler,devConf.devServer);
+    const server = new (require('webpack-dev-server'))(
+      compiler,
+      devConf.devServer
+    );
     server.listen(devConf.devServer.port);
   }
 
-  buildProd(config='./webpack.config.prod.js') {
+  buildProd(config = './webpack.config.prod.js') {
     const webpack = require('webpack');
     const compiler = webpack(require(config));
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       compiler.run((err, stats) => {
         if (err || stats.hasErrors()) {
           console.log(err);
           reject(err);
           return;
         }
-        console.log(stats.toString({
-          progress:true,
-          profile:true,
-          colors:true
-        }) + '\n');
+        console.log(
+          stats.toString({
+            progress: true,
+            profile: true,
+            colors: true,
+          }) + '\n'
+        );
         resolve();
       });
     });
@@ -58,7 +63,7 @@ class Build {
   }
 }
 
-module.exports = async function(buildType=START) {
+module.exports = async function(buildType = START) {
   const builder = new Build(buildType);
   await builder.run();
 };

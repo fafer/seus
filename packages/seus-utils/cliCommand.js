@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const os = require('os');
 const PLATFORM = {
   WINDOWS: 'WINDOWS',
-  UNIX: 'UNIX'
+  UNIX: 'UNIX',
 };
 
 function getPlatform() {
@@ -20,7 +20,7 @@ function getCdCommand() {
   switch (this.platform) {
     case PLATFORM.WINDOWS:
       return function cdToPath(folder) {
-        return 'cd \"' + folder + '"';
+        return 'cd "' + folder + '"';
       };
     case PLATFORM.UNIX:
       return function cdToPath(folder) {
@@ -32,14 +32,13 @@ function getCdCommand() {
 function getCleanseCommand(setEnvVar) {
   switch (this.platform) {
     case PLATFORM.WINDOWS:
-      return function (cmd) {
+      return function(cmd) {
         let envCmd = setEnvVar();
-        if (!envCmd.length)
-          return cmd;
+        if (!envCmd.length) return cmd;
         return [envCmd, cmd].join(' ');
       };
     case PLATFORM.UNIX:
-      return function (cmd) {
+      return function(cmd) {
         return [setEnvVar('LC_ALL', 'en_US.UTF-8'), cmd].join(' ');
       };
   }
@@ -48,33 +47,30 @@ function getCleanseCommand(setEnvVar) {
 function getSetEnv() {
   switch (this.platform) {
     case PLATFORM.WINDOWS:
-      return function (k, v) {
-        if (!k)
-          return '';
-        return 'SET '.concat([k,v].join('='));
+      return function(k, v) {
+        if (!k) return '';
+        return 'SET '.concat([k, v].join('='));
       };
     case PLATFORM.UNIX:
-      return function (k, v) {
-        if (!k)
-          return '';
-        return [k,v].join('=');
+      return function(k, v) {
+        if (!k) return '';
+        return [k, v].join('=');
       };
   }
 }
 
 function getConcatenator() {
-  switch(this.platform) {
+  switch (this.platform) {
     case PLATFORM.WINDOWS:
-      return function (cmds) {
+      return function(cmds) {
         return cmds.join(' && ');
       };
     case PLATFORM.UNIX:
-      return function (cmds) {
+      return function(cmds) {
         let cmdText = '';
         for (let i = 0; i < cmds.length; i++) {
           cmdText += cmds[i];
-          if (i < cmds.length - 1)
-            cmdText += ';';
+          if (i < cmds.length - 1) cmdText += ';';
         }
         return cmdText;
       };
@@ -89,13 +85,13 @@ let cliCommand = (function getExecutor() {
   let setEnvVar = getSetEnv.call(this);
   let cleanse = getCleanseCommand.call(this, setEnvVar);
 
-  return function (folder, cmd) {
+  return function(folder, cmd) {
     let cmds = [];
     cmds.push(cdTo(folder));
     cmds.push(cleanse(cmd));
 
     return concat(cmds);
-  }
+  };
 })();
 
 function mkdirCmdString(dirPath) {
@@ -137,5 +133,5 @@ module.exports = {
         resolve(stdout);
       });
     });
-  }
+  },
 };

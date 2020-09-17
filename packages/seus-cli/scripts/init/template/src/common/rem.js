@@ -1,5 +1,5 @@
 /* eslint-disable */
-(function (win, lib) {
+(function(win, lib) {
   var doc = win.document;
   var docEl = doc.documentElement;
   var metaEl = doc.querySelector('meta[name="viewport"]');
@@ -11,7 +11,9 @@
 
   if (metaEl) {
     console.warn('将根据已有的meta标签来设置缩放比例');
-    var match = metaEl.getAttribute('content').match(/initial\-scale=([\d\.]+)/);
+    var match = metaEl
+      .getAttribute('content')
+      .match(/initial\-scale=([\d\.]+)/);
     if (match) {
       scale = parseFloat(match[1]);
       dpr = parseInt(1 / scale);
@@ -56,7 +58,16 @@
   if (!metaEl) {
     metaEl = doc.createElement('meta');
     metaEl.setAttribute('name', 'viewport');
-    metaEl.setAttribute('content', 'initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+    metaEl.setAttribute(
+      'content',
+      'initial-scale=' +
+        scale +
+        ', maximum-scale=' +
+        scale +
+        ', minimum-scale=' +
+        scale +
+        ', user-scalable=no'
+    );
     if (docEl.firstElementChild) {
       docEl.firstElementChild.appendChild(metaEl);
     } else {
@@ -81,54 +92,65 @@
   function adjustRem() {
     let html = document.documentElement,
       body = document.getElementsByTagName('body')[0],
-      bodyW = body.style.width
-    body.style.width = '10rem' // 假如页面的视口宽度为10rem
+      bodyW = body.style.width;
+    body.style.width = '10rem'; // 假如页面的视口宽度为10rem
     let bodyWidth = body.getBoundingClientRect().width,
-      htmlWidth = html.getBoundingClientRect().width
+      htmlWidth = html.getBoundingClientRect().width;
     if (bodyWidth != htmlWidth) {
-      var size = parseInt(html.style.fontSize) * htmlWidth / bodyWidth
-      html.style.fontSize = size + 'px'
+      var size = (parseInt(html.style.fontSize) * htmlWidth) / bodyWidth;
+      html.style.fontSize = size + 'px';
     }
-    body.style.width = bodyW
+    body.style.width = bodyW;
   }
 
-  win.addEventListener('resize', function () {
-    clearTimeout(tid);
-    tid = setTimeout(refreshRem, 300);
-  }, false);
-  win.addEventListener('pageshow', function (e) {
-    if (e.persisted) {
+  win.addEventListener(
+    'resize',
+    function() {
       clearTimeout(tid);
       tid = setTimeout(refreshRem, 300);
-    }
-  }, false);
+    },
+    false
+  );
+  win.addEventListener(
+    'pageshow',
+    function(e) {
+      if (e.persisted) {
+        clearTimeout(tid);
+        tid = setTimeout(refreshRem, 300);
+      }
+    },
+    false
+  );
 
   if (doc.readyState === 'complete') {
     doc.body.style.fontSize = 12 * dpr + 'px';
   } else {
-    doc.addEventListener('DOMContentLoaded', function (e) {
-      doc.body.style.fontSize = 12 * dpr + 'px';
-    }, false);
+    doc.addEventListener(
+      'DOMContentLoaded',
+      function(e) {
+        doc.body.style.fontSize = 12 * dpr + 'px';
+      },
+      false
+    );
   }
 
   refreshRem();
 
   flexible.dpr = win.dpr = dpr;
   flexible.refreshRem = refreshRem;
-  flexible.rem2px = function (d) {
+  flexible.rem2px = function(d) {
     var val = parseFloat(d) * this.rem;
     if (typeof d === 'string' && d.match(/rem$/)) {
       val += 'px';
     }
     return val;
   };
-  flexible.px2rem = function (d) {
+  flexible.px2rem = function(d) {
     var val = parseFloat(d) / this.rem;
     if (typeof d === 'string' && d.match(/px$/)) {
       val += 'rem';
     }
     return val;
   };
-
 })(window, window['lib'] || (window['lib'] = {}));
 /* eslint-enable */

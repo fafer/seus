@@ -2,7 +2,7 @@ const spawn = require('cross-spawn');
 const execSync = require('child_process').execSync;
 const PLATFORM = {
   WINDOWS: 'WINDOWS',
-  UNIX: 'UNIX'
+  UNIX: 'UNIX',
 };
 
 function getPlatform() {
@@ -15,26 +15,24 @@ function getPlatform() {
   }
 }
 
-function checkPkg(name,resolve) {
+function checkPkg(name, resolve) {
   try {
     const result = execSync(`npm list ${name} -g`, { stdio: 'ignore' });
-    if(!result.toString().includes(name)) {
-      installPkg(name,resolve);
+    if (!result.toString().includes(name)) {
+      installPkg(name, resolve);
     }
   } catch (e) {
-    installPkg(name,resolve);
+    installPkg(name, resolve);
   }
 }
 
-function installPkg(name,resolve) {
+function installPkg(name, resolve) {
   try {
-    const child = spawn('npm', [
-      'i',
-      '-g',
-      name,
-      '--registry',
-      'http://registry.npm.taobao.org'
-    ], { stdio: 'inherit' });
+    const child = spawn(
+      'npm',
+      ['i', '-g', name, '--registry', 'http://registry.npm.taobao.org'],
+      { stdio: 'inherit' }
+    );
     child.on('close', () => {
       resolve();
     });
@@ -44,13 +42,13 @@ function installPkg(name,resolve) {
 }
 
 module.exports = function() {
-  return new Promise((resolve) => {
-    checkPkg('yarn',() => {
-      if(getPlatform() === PLATFORM.WINDOWS) {
-        checkPkg('mirror-config-china',resolve)
+  return new Promise(resolve => {
+    checkPkg('yarn', () => {
+      if (getPlatform() === PLATFORM.WINDOWS) {
+        checkPkg('mirror-config-china', resolve);
       } else {
         resolve();
       }
     });
-  })
-}
+  });
+};

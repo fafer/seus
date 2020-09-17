@@ -27,14 +27,14 @@ async function upload(client, src, dest) {
           if (!err)
             spinner.succeed(
               `[${moment().format('HH:mm:ss')}] ` +
-              chalk.green('[文件]') +
-              ` : ${destPath}`
+                chalk.green('[文件]') +
+                ` : ${destPath}`
             );
           else
             spinner.fail(
               `[${moment().format('HH:mm:ss')}] ` +
-              chalk.red('[文件]') +
-              ` : ${destPath}`
+                chalk.red('[文件]') +
+                ` : ${destPath}`
             );
           resolve();
         });
@@ -46,12 +46,12 @@ async function upload(client, src, dest) {
 function mkdir(client, directory) {
   return new Promise(resolve => {
     const spinner = ora(`${directory}`).start();
-    client.mkdir(directory, function (err) {
+    client.mkdir(directory, function(err) {
       if (!err) {
         spinner.succeed(
           `[${moment().format('HH:mm:ss')}] ` +
-          chalk.green('[目录]') +
-          ` : ${directory}`
+            chalk.green('[目录]') +
+            ` : ${directory}`
         );
       }
       spinner.stop();
@@ -63,7 +63,7 @@ function mkdir(client, directory) {
 function task(server, fn) {
   let clientInstance = new Client(),
     login = false;
-  clientInstance.on('error', (err) => {
+  clientInstance.on('error', err => {
     if (err) console.error(err);
     if (login) return;
     login = true;
@@ -89,7 +89,7 @@ class Upload {
   }
 
   put(src, dest) {
-    task(this.server, async function () {
+    task(this.server, async function() {
       const success = await new Promise(resolve => {
         let dir = path.basename(dest),
           hasDir = false;
@@ -105,11 +105,12 @@ class Upload {
               break;
             }
           }
-          if (!hasDir) ora('').fail(chalk.red(`${dest} not exit on ftp server`));
+          if (!hasDir)
+            ora('').fail(chalk.red(`${dest} not exit on ftp server`));
           resolve(hasDir);
         });
       });
-      success && await upload(this, src, dest);
+      success && (await upload(this, src, dest));
     });
   }
 }

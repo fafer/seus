@@ -1,12 +1,12 @@
 const path = require('path');
 const fs = require('fs');
 const cwd = process.cwd();
-let {conf,frame} = require('seus-utils');
-const confPath = path.resolve(cwd,'seus.config.json');
-if(fs.existsSync(confPath)) {
-  conf = Object.assign(conf,require(confPath));
+let { conf, frame } = require('seus-utils');
+const confPath = path.resolve(cwd, 'seus.config.json');
+if (fs.existsSync(confPath)) {
+  conf = Object.assign(conf, require(confPath));
 }
-const resolveExtensions = frame === 'react' ? /\.jsx?$/:/\.js$/;
+const resolveExtensions = frame === 'react' ? /\.jsx?$/ : /\.js$/;
 const getEntry = function(
   pathname,
   base = path.basename(pathname),
@@ -41,7 +41,7 @@ const PREFIX = conf.prefix || path.basename(ENTRY_PATH);
 const ENTRY_SEPERATE = conf.seperate;
 
 const CONFIG_COPY_PATH = conf.copyPath || '';
-const COPY_PATH = path.join(cwd, 'src',CONFIG_COPY_PATH);
+const COPY_PATH = path.join(cwd, 'src', CONFIG_COPY_PATH);
 
 const COPY_DEST_PATH = path.join(OUT_PATH, CONFIG_COPY_PATH);
 
@@ -68,7 +68,7 @@ module.exports = {
   COPY_PATH,
   COPY_DEST_PATH,
   getEntry() {
-    return getEntry(ENTRY_PATH,PREFIX);
+    return getEntry(ENTRY_PATH, PREFIX);
   },
   ENTRY_SEPERATE,
   HOST,
@@ -83,5 +83,5 @@ module.exports = {
   FTP,
   CONFIG_COPY_PATH,
   PREFIX,
-  VENDOR
+  VENDOR,
 };

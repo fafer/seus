@@ -30,7 +30,7 @@ module.exports = Merge(CommonConfig, {
     compress: true,
     publicPath: conf.BASEPATH,
     stats: 'errors-only',
-    progress:true,
+    progress: true,
     watchOptions: {
       poll: true,
     },
@@ -48,7 +48,7 @@ module.exports = Merge(CommonConfig, {
           }
         },
       },
-      ...conf.PROXY
+      ...conf.PROXY,
     ],
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],

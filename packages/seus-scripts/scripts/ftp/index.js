@@ -3,21 +3,24 @@ const chalk = require('chalk');
 const path = require('path');
 const cli = require('./cli');
 
-module.exports = function(index,all) {
-  cli(index,all).then(server => {
+module.exports = function(index, all) {
+  cli(index, all).then(server => {
     if (
       !fs.existsSync(server.srcPath) ||
       !fs.lstatSync(server.srcPath).isDirectory()
     ) {
-      console.warn(chalk.yellow(`${server.srcPath} is not exit or not directory`));
+      console.warn(
+        chalk.yellow(`${server.srcPath} is not exit or not directory`)
+      );
       process.exit();
     }
     const Upload = require('./upload');
     const uploaderInstance = new Upload(server);
     uploaderInstance.put(
-      path.isAbsolute(server.srcPath)?server.srcPath:path.resolve(process.cwd(),server.srcPath),
+      path.isAbsolute(server.srcPath)
+        ? server.srcPath
+        : path.resolve(process.cwd(), server.srcPath),
       path.posix.resolve(server.destPath)
     );
   });
-}
-
+};

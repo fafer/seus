@@ -3,13 +3,14 @@ const conf = require('../../conf');
 const webpack = require('webpack');
 const Merge = require('webpack-merge');
 const CommonConfig = require('./webpack.common.js');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtraHtmlWebpackPlugin = require('./plugins/extra-html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const argv = require('yargs').argv;
 
 function htmlPlugin() {
@@ -43,15 +44,15 @@ module.exports = Merge(CommonConfig, {
       new TerserPlugin({
         sourceMap: false,
         extractComments: false,
-        terserOptions:{
-          compress:{
-            drop_console: true
+        terserOptions: {
+          compress: {
+            drop_console: true,
           },
           output: {
-            comments: false
+            comments: false,
           },
           warnings: false,
-        }
+        },
       }),
       new OptimizeCSSAssetsPlugin({}),
     ],
@@ -66,7 +67,8 @@ module.exports = Merge(CommonConfig, {
       },
     }),
     ...(function() {
-      if(process.env.BUNDLE_ANALY === 'bundle-analy') return [new BundleAnalyzerPlugin()];
+      if (process.env.BUNDLE_ANALY === 'bundle-analy')
+        return [new BundleAnalyzerPlugin()];
       return [];
     })(),
     ...htmlPlugin(),

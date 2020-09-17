@@ -23,8 +23,8 @@ const cli = meow(
       scripts: {
         type: 'string',
         alias: 's',
-      }
-    }
+      },
+    },
   }
 );
 seusCli(cli);

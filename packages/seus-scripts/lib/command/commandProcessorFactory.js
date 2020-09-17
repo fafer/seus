@@ -5,7 +5,7 @@ const {
   BUILDFTP,
   BUILDFCM,
   BUILDDLL,
-  BUILDBUNDLEANALY
+  BUILDBUNDLEANALY,
 } = require('../../scripts/build/buildType');
 const CommandProcessor = require('./commandProcessor');
 class CommandProcessorFactory {
@@ -53,7 +53,7 @@ class CommandProcessorFactory {
         Processor = require('./buildCommandProcessor');
         break;
     }
-    return Processor ? new Processor(cli):new CommandProcessor(cli);
+    return Processor ? new Processor(cli) : new CommandProcessor(cli);
   }
 }
 

@@ -2,7 +2,6 @@ const CommandProcessor = require('./commandProcessor');
 const add = require('../../scripts/add');
 
 class AddCommandProcessor extends CommandProcessor {
-
   constructor(cli) {
     super(cli);
     this.name = this.cli.input[1];
@@ -23,13 +22,11 @@ class AddCommandProcessor extends CommandProcessor {
         seus add test
         seus add test --title=test
         seus add test --component=test
-    `
-      );
+    `);
     } else {
-      add(this.name,{title:this.title,component:this.component});
+      add(this.name, { title: this.title, component: this.component });
     }
   }
-
 }
 
 module.exports = AddCommandProcessor;

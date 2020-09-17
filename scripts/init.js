@@ -26,7 +26,7 @@ const handleError = e => {
 process.on('SIGINT', handleExit);
 process.on('uncaughtException', handleError);
 
-module.exports = function (frame = 'react') {
+module.exports = function(frame = 'react') {
   const rootDir = path.join(__dirname, '..');
   const packagesDir = path.join(rootDir, 'packages');
   const packagePathsByName = {};
@@ -45,7 +45,8 @@ module.exports = function (frame = 'react') {
         json.dependencies[otherName] = 'file:' + packagePathsByName[otherName];
       }
       if (json.devDependencies && json.devDependencies[otherName]) {
-        json.devDependencies[otherName] = 'file:' + packagePathsByName[otherName];
+        json.devDependencies[otherName] =
+          'file:' + packagePathsByName[otherName];
       }
       if (json.peerDependencies && json.peerDependencies[otherName]) {
         json.peerDependencies[otherName] =
@@ -62,12 +63,16 @@ module.exports = function (frame = 'react') {
 
   const scriptsFileName = cp
     .execSync('npm pack', {
-      cwd: path.join(packagesDir, 'seus-package-' + frame)
+      cwd: path.join(packagesDir, 'seus-package-' + frame),
     })
     .toString()
     .trim();
-  const scriptsPath = path.join(packagesDir, 'seus-package-' + frame, scriptsFileName);
-  
+  const scriptsPath = path.join(
+    packagesDir,
+    'seus-package-' + frame,
+    scriptsFileName
+  );
+
   try {
     cp.execSync('yarn cache clean');
   } catch (e) {
@@ -78,11 +83,12 @@ module.exports = function (frame = 'react') {
 
   const scriptPath = path.join(packagesDir, 'seus-cli', '/lib/index.js');
   cp.execSync(
-    `node ${scriptPath} ${args.join(' ')} --scripts="${scriptsPath}"`, {
+    `node ${scriptPath} ${args.join(' ')} --scripts="${scriptsPath}"`,
+    {
       cwd: rootDir,
       stdio: 'inherit',
     }
   );
 
   handleExit();
-}
+};

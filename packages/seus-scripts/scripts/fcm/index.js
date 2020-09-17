@@ -2,7 +2,9 @@
 
 'use strict';
 
-const {cliCommand:{cmdPromise,mkdirCmdString,cpCmdString}} = require('seus-utils');
+const {
+  cliCommand: { cmdPromise, mkdirCmdString, cpCmdString },
+} = require('seus-utils');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -32,22 +34,26 @@ async function checkout() {
   let checkoutPicCMD = `svn checkout ${svn_pic} ${local_pic}`,
     checkoutStaticCMD = `svn checkout ${svn_static} ${local_static}`;
   await cmdPromise(
-    projectPath, checkoutPicCMD,
+    projectPath,
+    checkoutPicCMD,
     ora(chalk.green(chalk.green(checkoutPicCMD))).start()
   );
   await cmdPromise(
-    projectPath, checkoutStaticCMD,
+    projectPath,
+    checkoutStaticCMD,
     ora(chalk.green(chalk.green(checkoutStaticCMD))).start()
   );
 }
 
 async function update() {
   await cmdPromise(
-    local_pic, 'svn update',
+    local_pic,
+    'svn update',
     ora(chalk.green(chalk.green(`${local_pic}:svn update ...`))).start()
   );
   await cmdPromise(
-    local_static, 'svn update',
+    local_static,
+    'svn update',
     ora(chalk.green(chalk.green(`${local_static}:svn update ...`))).start()
   );
 }
@@ -103,7 +109,8 @@ async function _commit(local, message) {
   }
   await add(local, info);
   return cmdPromise(
-    local, `svn commit -m fcm:${message}`,
+    local,
+    `svn commit -m fcm:${message}`,
     ora(chalk.green(chalk.green(`${local}:svn commit ...`))).start()
   );
 }
@@ -178,9 +185,7 @@ async function cp(src, base = '') {
       if (base) {
         await cmdPromise(local_static, mkdirCmdString(base));
       }
-      await cmdPromise(
-        local_static, cpCmdString(filePath, destPath)
-      );
+      await cmdPromise(local_static, cpCmdString(filePath, destPath));
     }
   }
 }
@@ -192,6 +197,6 @@ async function deployFcm({ message, yes }) {
   await push(project, revisions, yes);
 }
 
-module.exports = function(message,yes) {
-  deployFcm({message,yes})
-}
+module.exports = function(message, yes) {
+  deployFcm({ message, yes });
+};
