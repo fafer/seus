@@ -1,6 +1,6 @@
 {
   "name": "seus-package-vue",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "> TODO: description",
   "author": "fafer <zhoucheng502@sina.com>",
   "homepage": "https://github.com/fafer/seus#readme",
@@ -26,6 +26,6 @@
     "vue-router": "^3.0.3",
     "vuex": "^3.1.0",
     "vue-jsonp": "^0.1.8",
-    "seus-scripts": "^1.0.3"
+    "seus-scripts": "^1.0.5"
   }
 }

@@ -17,3 +17,14 @@ seus init project
 
 seus init project --yes 默认创建 react 项目
 ```
+
+## Dev
+
+```hash
+npm i
+
+npm run create-react-app <name> 创建 react 项目
+
+npm run create-vue-app <name> 创建 vue 项目
+
+```

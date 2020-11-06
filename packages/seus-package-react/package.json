@@ -1,6 +1,6 @@
 {
   "name": "seus-package-react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "> TODO: description",
   "author": "fafer <zhoucheng502@sina.com>",
   "homepage": "https://github.com/fafer/seus#readme",
@@ -28,6 +28,6 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "seus-scripts": "^1.0.3"
+    "seus-scripts": "^1.0.5"
   }
 }

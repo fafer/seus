@@ -5,7 +5,7 @@
 	"scripts": {
 		"postinstall": "node scripts/prepackage && npm run init",
 		"init": "lerna bootstrap --no-ci",
-		"start": "node scripts/init",
+		"start": "npm run create-react-app",
 		"eslint": "eslint . --ext .js --fix",
 		"prettier": "prettier '**/*.js' --trailing-comma es5 --single-quote --write",
 		"link": "cd packages/seus-cli && npm unlink && npm link",
